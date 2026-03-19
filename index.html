@@ -48,6 +48,17 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:system-u
 .stat-n{font-size:20px;font-weight:700;color:var(--txt);line-height:1;font-variant-numeric:tabular-nums;}
 .stat-l{font-size:9px;color:var(--txt3);margin-top:4px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;}
 
+/* ── RATING COUNTERS ── */
+.rating-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr 1fr;
+  gap:1px;background:var(--brd);
+  border-top:1px solid var(--brd);border-bottom:1px solid var(--brd);
+}
+.rcell{background:var(--bg);padding:14px 8px;text-align:center;}
+.rcell-n{font-size:20px;font-weight:700;color:var(--txt);line-height:1;font-variant-numeric:tabular-nums;}
+.rcell-dot{font-size:10px;margin-bottom:3px;}
+.rcell-l{font-size:9px;color:var(--txt3);margin-top:4px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;}
+
 /* ── STUDY ALL BUTTON ── */
 .study-all-wrap{padding:16px 22px;}
 .btn-study-all{
@@ -80,6 +91,12 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:system-u
 }
 .topic-row.has-cards:active{background:var(--sur);}
 .topic-row.empty{opacity:.4;cursor:default;}
+.topic-reset{
+  background:transparent;border:1px solid var(--brd);border-radius:8px;
+  color:var(--txt3);font-size:10px;font-weight:600;font-family:inherit;
+  padding:5px 9px;cursor:pointer;flex-shrink:0;white-space:nowrap;
+}
+.topic-reset:active{background:var(--sur2);color:var(--txt);}
 
 .topic-num{
   width:32px;height:32px;border-radius:8px;
@@ -110,26 +127,35 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:system-u
 .prog-bar{height:100%;background:var(--txt);transition:width .35s ease;width:0%;}
 
 /* ── CARD ── */
-.card-area{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;overflow:hidden;touch-action:pan-y;}
+.card-area{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;touch-action:pan-y;}
 .card-scene{width:100%;max-width:400px;}
-.card-wrap{position:relative;width:100%;aspect-ratio:3/4.2;}
-.card-inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.4,0,.2,1);will-change:transform;cursor:pointer;}
-.card-inner.flipped{transform:rotateY(180deg);}
-.card-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;display:flex;flex-direction:column;overflow:hidden;}
-.card-face.front{background:var(--crd);border:1px solid var(--brd2);box-shadow:0 12px 40px rgba(0,0,0,.6);}
-.card-face.back{background:var(--sur2);border:1px solid var(--brd2);transform:rotateY(180deg);box-shadow:0 12px 40px rgba(0,0,0,.6);}
+.card-wrap{
+  width:100%;aspect-ratio:3/4.2;
+  border-radius:18px;display:flex;flex-direction:column;
+  box-shadow:0 12px 40px rgba(0,0,0,.6);
+  cursor:pointer;
+}
+.card-wrap.is-question{background:var(--crd);border:1px solid var(--brd2);}
+.card-wrap.is-answer  {background:var(--sur2);border:1px solid var(--brd2);}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.97);}to{opacity:1;transform:none;}}
+.card-wrap.anim{animation:cardIn .25s ease;}
+
+@keyframes flipOut{from{transform:perspective(600px) rotateY(0deg);}to{transform:perspective(600px) rotateY(-90deg);}}
+@keyframes flipIn {from{transform:perspective(600px) rotateY(90deg);}to{transform:perspective(600px) rotateY(0deg);}}
+.card-wrap.flip-out{animation:flipOut .18s ease-in forwards;}
+.card-wrap.flip-in {animation:flipIn  .18s ease-out forwards;}
 .card-tag{padding:14px 16px 0;display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .pill{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:100px;}
-.pq{background:var(--acc-dim);color:var(--txt2);border:1px solid var(--acc-border);}
-.pa{background:rgba(255,255,255,.12);color:var(--txt);border:1px solid rgba(255,255,255,.2);}
+.pill-q{background:var(--acc-dim);color:var(--txt2);border:1px solid var(--acc-border);}
+.pill-a{background:rgba(255,255,255,.12);color:var(--txt);border:1px solid rgba(255,255,255,.2);}
 .card-num{font-size:10px;color:var(--txt3);margin-left:auto;font-variant-numeric:tabular-nums;}
 .card-body{flex:1;display:flex;align-items:center;justify-content:center;padding:14px 20px;overflow-y:auto;}
-.cq{font-size:clamp(15px,4.5vw,20px);line-height:1.45;text-align:center;color:var(--txt);font-weight:600;}
-.ca{font-size:clamp(12px,3.2vw,15px);line-height:1.65;text-align:center;color:var(--txt);}
-.ca strong{color:#fff;font-weight:700;}
-.ca em{color:var(--txt2);font-style:normal;font-weight:500;}
-.ca code{font-size:.85em;background:rgba(255,255,255,.08);padding:1px 7px;border-radius:4px;color:var(--txt);font-family:monospace;border:1px solid var(--brd2);}
-.card-hint{padding:0 16px 12px;text-align:center;font-size:10px;color:var(--txt3);opacity:.6;flex-shrink:0;}
+.txt-q{font-size:clamp(15px,4.5vw,20px);line-height:1.45;text-align:center;color:var(--txt);font-weight:600;}
+.txt-a{font-size:clamp(12px,3.2vw,15px);line-height:1.65;text-align:center;color:var(--txt);}
+.txt-a strong{color:#fff;font-weight:700;}
+.txt-a em{color:var(--txt2);font-style:normal;font-weight:500;}
+.txt-a code{font-size:.85em;background:rgba(255,255,255,.08);padding:1px 7px;border-radius:4px;color:var(--txt);font-family:monospace;border:1px solid var(--brd2);}
+.card-hint{padding:0 16px 12px;text-align:center;font-size:10px;color:var(--txt3);opacity:.55;flex-shrink:0;}
 
 /* ── STUDY CONTROLS ── */
 .study-controls{padding:8px 16px 28px;flex-shrink:0;}
@@ -153,6 +179,30 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:system-u
 }
 .btn-shuf:active{background:var(--sur);}
 
+/* ── RATING BUTTONS ── */
+.rate-row{display:none;gap:8px;margin-bottom:8px;}
+.rate-row.visible{display:flex;}
+.btn-rate{
+  flex:1;padding:13px 6px;border:none;border-radius:12px;
+  cursor:pointer;font-family:inherit;font-weight:700;font-size:12px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  transition:opacity .15s;
+}
+.btn-rate:active{opacity:.8;}
+.btn-rate .rate-icon{font-size:16px;line-height:1;}
+.btn-easy {background:#1a3a1a;color:#4ade80;border:1px solid #2d5a2d;}
+.btn-medio{background:#3a2e0a;color:#facc15;border:1px solid #5a4510;}
+.btn-hard {background:#3a1010;color:#f87171;border:1px solid #5a2020;}
+/* hide nav row when rating is shown */
+.ctrl-row.hidden{display:none;}
+
+/* queue counter badge */
+.queue-badge{
+  font-size:10px;color:var(--txt3);
+  background:var(--sur2);border:1px solid var(--brd);
+  border-radius:100px;padding:2px 8px;font-variant-numeric:tabular-nums;
+}
+
 /* ── DONE ── */
 .done-icon{font-size:52px;margin-bottom:16px;}
 .done-title{font-size:26px;font-weight:700;margin-bottom:8px;}
@@ -164,7 +214,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:system-u
 .bs{background:var(--sur);color:var(--txt);border:1px solid var(--brd)!important;}
 
 @keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.97);}to{opacity:1;transform:none;}}
-.anim{animation:cardIn .28s ease;}
+.card-wrap.anim{animation:cardIn .28s ease;}
 </style>
 </head>
 <body>
@@ -180,7 +230,29 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:system-u
   <div class="stats-bar">
     <div class="stat"><div class="stat-n" id="statCards">0</div><div class="stat-l">Tarjetas</div></div>
     <div class="stat"><div class="stat-n" id="statTopics">0/21</div><div class="stat-l">Temas</div></div>
-    <div class="stat"><div class="stat-n" id="statSeen">0</div><div class="stat-l">Vistas</div></div>
+  </div>
+
+  <div class="rating-grid">
+    <div class="rcell">
+      <div class="rcell-dot" style="color:#4ade80">&#9679;</div>
+      <div class="rcell-n" id="rcEasy">0</div>
+      <div class="rcell-l">F&#225;cil</div>
+    </div>
+    <div class="rcell">
+      <div class="rcell-dot" style="color:#facc15">&#9679;</div>
+      <div class="rcell-n" id="rcMedio">0</div>
+      <div class="rcell-l">Medio</div>
+    </div>
+    <div class="rcell">
+      <div class="rcell-dot" style="color:#f87171">&#9679;</div>
+      <div class="rcell-n" id="rcHard">0</div>
+      <div class="rcell-l">Dif&#237;cil</div>
+    </div>
+    <div class="rcell">
+      <div class="rcell-dot" style="color:var(--txt3)">&#9675;</div>
+      <div class="rcell-n" id="rcUnseen">0</div>
+      <div class="rcell-l">Sin ver</div>
+    </div>
   </div>
 
   <div class="study-all-wrap">
@@ -205,30 +277,28 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:system-u
 
   <div class="card-area" id="cardArea">
     <div class="card-scene">
-      <div class="card-wrap">
-        <div class="card-inner" id="cardInner">
-          <div class="card-face front">
-            <div class="card-tag"><span class="pill pq">Pregunta</span><span class="card-num" id="cnF">01</span></div>
-            <div class="card-body"><div class="cq" id="cardQ"></div></div>
-            <div class="card-hint">Toca para voltear &bull; Desliza para cambiar</div>
-          </div>
-          <div class="card-face back">
-            <div class="card-tag"><span class="pill pa">Respuesta</span><span class="card-num" id="cnB">01</span></div>
-            <div class="card-body"><div class="ca" id="cardA"></div></div>
-            <div class="card-hint">Toca para voltear &bull; Desliza para cambiar</div>
-          </div>
-        </div>
+      <div class="card-wrap" id="cardWrap">
+        <div class="card-tag"><span class="pill" id="cardPill">Pregunta</span><span class="card-num" id="cardNum">01</span></div>
+        <div class="card-body"><div id="cardContent"></div></div>
+        <div class="card-hint" id="cardHint">Toca para ver la respuesta &bull; Desliza para navegar</div>
       </div>
     </div>
   </div>
 
   <div class="study-controls">
-    <div class="ctrl-row">
+    <!-- Rating row: shown after flipping -->
+    <div class="rate-row" id="rateRow">
+      <button class="btn-rate btn-easy"  id="btnEasy"><span class="rate-icon">&#128994;</span>F&#225;cil</button>
+      <button class="btn-rate btn-medio" id="btnMedio"><span class="rate-icon">&#128993;</span>Medio</button>
+      <button class="btn-rate btn-hard"  id="btnHard"><span class="rate-icon">&#128308;</span>Dif&#237;cil</button>
+    </div>
+    <!-- Nav row: shown while viewing question -->
+    <div class="ctrl-row" id="navRow">
       <button class="btn-nav" id="btnPrev">&#8592; Ant</button>
       <button class="btn-nav btn-flip" id="btnFlip">&#8635; Voltear</button>
       <button class="btn-nav" id="btnNext">Sig &#8594;</button>
     </div>
-    <button class="btn-shuf" id="btnShuf">&#128256; Barajar</button>
+    <button class="btn-shuf" id="btnShuf">&#128256; Barajar &nbsp;<span class="queue-badge" id="queueBadge">0 pendientes</span></button>
   </div>
 </div>
 
@@ -581,9 +651,19 @@ var TOPICS = [
 ];
 
 // ── STATE ─────────────────────────────────────────────────────────
-var deck = [], deckSource = null, idx = 0, flipped = false, seenTotal = 0;
+// queue: cards still to master this session (pending[0] = current card)
+// done:  count of cards marked Easy (mastered this session)
+var pending = [], done = 0;
+var deckSource = null;
+var flipped = false;
+var seenTotal = 0;
+// Cumulative rating counters (persist across sessions within the page)
+var cntEasy = 0, cntMedio = 0, cntHard = 0;
+// Per-card last rating: key = card object reference, value = "easy"|"medio"|"hard"
+var cardRatings = [];
 var tx0=0, ty0=0, tt0=0, wasSwiping=false;
 
+// ── HELPERS ───────────────────────────────────────────────────────
 function totalCards() {
   var n=0; for(var i=0;i<TOPICS.length;i++) n+=TOPICS[i].cards.length; return n;
 }
@@ -596,26 +676,42 @@ function getAllCards() {
   return out;
 }
 
+// ── SCREENS ───────────────────────────────────────────────────────
 function show(id) {
   var all=document.querySelectorAll(".screen");
   for(var i=0;i<all.length;i++) all[i].classList.remove("active");
   document.getElementById(id).classList.add("active");
 }
 
+// ── HOME ──────────────────────────────────────────────────────────
 function initHome() {
   var total=totalCards();
   document.getElementById("statCards").textContent = total;
   document.getElementById("statTopics").textContent = topicsWithCards()+"/21";
-  document.getElementById("statSeen").textContent = seenTotal;
   document.getElementById("allCount").textContent = total+" tarjeta"+(total!==1?"s":"");
+
+  // Rating counters
+  var rated = cntEasy + cntMedio + cntHard;
+  var unseen = Math.max(0, total - rated);
+  document.getElementById("rcEasy").textContent   = cntEasy;
+  document.getElementById("rcMedio").textContent  = cntMedio;
+  document.getElementById("rcHard").textContent   = cntHard;
+  document.getElementById("rcUnseen").textContent = unseen;
 
   var tl=document.getElementById("topicList");
   tl.innerHTML="";
   for(var i=0;i<TOPICS.length;i++) {
     (function(t) {
       var has=t.cards.length>0;
+
+      // Wrapper div (not a button) so we can have two independent clickable areas
+      var wrap=document.createElement("div");
+      wrap.style.cssText="display:flex;align-items:center;gap:0;background:var(--bg);";
+
+      // Main topic button
       var btn=document.createElement("button");
       btn.className="topic-row "+(has?"has-cards":"empty");
+      btn.style.cssText="flex:1;border-radius:0;";
       btn.innerHTML=
         "<div class=\"topic-num\">T"+t.num+"</div>"+
         "<div class=\"topic-info\">"+
@@ -624,75 +720,290 @@ function initHome() {
         "</div>"+
         "<div class=\"topic-arrow\">"+(has?"&#8250;":"")+"</div>";
       if(has) btn.addEventListener("click",function(){startTopic(t);});
-      tl.appendChild(btn);
+      wrap.appendChild(btn);
+
+      // Reset button (only for topics with cards)
+      if(has) {
+        var rst=document.createElement("button");
+        rst.className="topic-reset";
+        rst.style.cssText="margin-right:16px;";
+        rst.textContent="Reset";
+        rst.addEventListener("click",function(e){
+          e.stopPropagation();
+          resetTopic(t);
+        });
+        wrap.appendChild(rst);
+      }
+
+      tl.appendChild(wrap);
     })(TOPICS[i]);
   }
 }
 
+// ── STUDY ─────────────────────────────────────────────────────────
+
+// Build a weighted, ordered deck from a cards array using stored ratings:
+//   hard    → appears 3 times, at the front
+//   unrated → appears 2 times, in the middle
+//   medio   → appears 1 time,  in the middle
+//   easy    → appears 1 time,  at the end
+function buildDeck(cards) {
+  var hard=[], unrated=[], medio=[], easy=[];
+  for(var i=0; i<cards.length; i++) {
+    var r = getRating(cards[i]);
+    if(r === "hard")       hard.push(cards[i]);
+    else if(r === "medio") medio.push(cards[i]);
+    else if(r === "easy")  easy.push(cards[i]);
+    else                   unrated.push(cards[i]);
+  }
+  // Shuffle each group independently
+  doShuffle(hard); doShuffle(unrated); doShuffle(medio); doShuffle(easy);
+
+  var deck = [];
+  // Hard cards appear 3 times (spread across session)
+  for(var i=0; i<hard.length; i++) deck.push(hard[i]);
+  // Unrated and medio interleaved first
+  for(var i=0; i<unrated.length; i++) deck.push(unrated[i]);
+  for(var i=0; i<medio.length; i++) deck.push(medio[i]);
+  // Hard cards a second time in the middle
+  for(var i=0; i<hard.length; i++) deck.push(hard[i]);
+  // Hard cards a third time near the end
+  for(var i=0; i<hard.length; i++) deck.push(hard[i]);
+  // Easy cards at the very end (once)
+  for(var i=0; i<easy.length; i++) deck.push(easy[i]);
+
+  return deck;
+}
+
 function startAll() {
   var cards=getAllCards(); if(!cards.length) return;
-  deckSource=cards; deck=cards.slice(); beginStudy("Todo el temario");
+  deckSource=cards; pending=buildDeck(cards); done=0;
+  beginStudy("Todo el temario");
 }
 function startTopic(t) {
-  deckSource=t.cards; deck=t.cards.slice();
+  deckSource=t.cards; pending=buildDeck(t.cards); done=0;
   beginStudy("T"+t.num+" \u00b7 "+t.name);
 }
 function beginStudy(name) {
-  idx=0; flipped=false;
+  flipped=false;
   document.getElementById("deckName").textContent=name;
   show("study"); render();
 }
+
+// Insert card back into pending at given position (clamped to array length)
+function reinsert(card, pos) {
+  var insertAt = Math.min(pos, pending.length);
+  pending.splice(insertAt, 0, card);
+}
+
 function render() {
-  if(idx>=deck.length) {
-    seenTotal+=deck.length;
-    document.getElementById("doneSub").textContent="Has repasado "+deck.length+" tarjeta"+(deck.length!==1?"s":"");
+  if(pending.length === 0) {
+    seenTotal += done;
+    document.getElementById("doneSub").textContent =
+      "Has repasado "+done+" tarjeta"+(done!==1?"s":"");
     show("done"); initHome(); return;
   }
-  var c=deck[idx], total=deck.length, n=("0"+(idx+1)).slice(-2);
-  document.getElementById("cardQ").innerHTML=c.q;
-  document.getElementById("cardA").innerHTML=c.a;
-  document.getElementById("cnF").textContent=n+"/"+total;
-  document.getElementById("cnB").textContent=n+"/"+total;
-  document.getElementById("progTxt").textContent=(idx+1)+" / "+total;
-  document.getElementById("progBar").style.width=((idx/total)*100)+"%";
-  var ci=document.getElementById("cardInner");
-  ci.style.transition="none"; ci.classList.remove("flipped"); flipped=false;
-  ci.getBoundingClientRect(); ci.style.transition="";
-  ci.classList.remove("anim"); ci.getBoundingClientRect(); ci.classList.add("anim");
-}
-function doFlip(){flipped=!flipped;document.getElementById("cardInner").classList.toggle("flipped",flipped);}
-function next(){if(idx<deck.length){idx++;render();}}
-function prev(){if(idx>0){idx--;render();}}
-function doShuffle(arr){for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=arr[i];arr[i]=arr[j];arr[j]=tmp;}}
-function shuffleRender(){doShuffle(deck);idx=0;flipped=false;render();}
 
+  var c = pending[0];
+  var total = done + pending.length;
+  var current = done + 1;
+  var n = ("0"+current).slice(-2);
+
+  // Show QUESTION side
+  var cw = document.getElementById("cardWrap");
+  cw.className = "card-wrap is-question";
+  document.getElementById("cardPill").className = "pill pill-q";
+  document.getElementById("cardPill").textContent = "Pregunta";
+  document.getElementById("cardNum").textContent = n+"/"+total;
+  document.getElementById("cardContent").className = "txt-q";
+  document.getElementById("cardContent").innerHTML = c.q;
+  document.getElementById("cardHint").textContent = "Toca para ver la respuesta";
+
+  document.getElementById("progTxt").textContent = current+" / "+total;
+  document.getElementById("progBar").style.width = ((done/total)*100)+"%";
+  document.getElementById("queueBadge").textContent = pending.length+" pendiente"+(pending.length!==1?"s":"");
+
+  flipped = false;
+  showNavMode();
+
+  // entry animation
+  cw.classList.remove("anim");
+  void cw.offsetWidth;
+  cw.classList.add("anim");
+}
+
+function showNavMode() {
+  document.getElementById("navRow").classList.remove("hidden");
+  document.getElementById("rateRow").classList.remove("visible");
+}
+function showRateMode() {
+  document.getElementById("navRow").classList.add("hidden");
+  document.getElementById("rateRow").classList.add("visible");
+}
+
+function doFlip() {
+  var c = pending[0];
+  var cw = document.getElementById("cardWrap");
+
+  // Phase 1: rotate out
+  cw.classList.remove("flip-in","flip-out");
+  void cw.offsetWidth;
+  cw.classList.add("flip-out");
+
+  setTimeout(function() {
+    // Swap content at the midpoint (card is edge-on)
+    if(!flipped) {
+      flipped = true;
+      cw.className = "card-wrap is-answer";
+      document.getElementById("cardPill").className = "pill pill-a";
+      document.getElementById("cardPill").textContent = "Respuesta";
+      document.getElementById("cardContent").className = "txt-a";
+      document.getElementById("cardContent").innerHTML = c.a;
+      document.getElementById("cardHint").textContent = "Val\u00f3rate para continuar";
+      showRateMode();
+    } else {
+      flipped = false;
+      cw.className = "card-wrap is-question";
+      document.getElementById("cardPill").className = "pill pill-q";
+      document.getElementById("cardPill").textContent = "Pregunta";
+      document.getElementById("cardContent").className = "txt-q";
+      document.getElementById("cardContent").innerHTML = c.q;
+      document.getElementById("cardHint").textContent = "Toca para ver la respuesta";
+      showNavMode();
+    }
+    // Phase 2: rotate in
+    cw.classList.add("flip-in");
+  }, 180);
+}
+
+// ── RATING LOGIC ──────────────────────────────────────────────────
+function getRating(card) {
+  for(var i=0; i<cardRatings.length; i++) {
+    if(cardRatings[i].card === card) return cardRatings[i].rating;
+  }
+  return null;
+}
+function setRating(card, rating) {
+  for(var i=0; i<cardRatings.length; i++) {
+    if(cardRatings[i].card === card) { cardRatings[i].rating = rating; return; }
+  }
+  cardRatings.push({ card: card, rating: rating });
+}
+
+// Remove stored ratings for all cards in a topic and adjust counters
+function resetTopic(t) {
+  for(var i=0; i<t.cards.length; i++) {
+    var prev = getRating(t.cards[i]);
+    if(prev === "easy")  cntEasy  = Math.max(0, cntEasy-1);
+    else if(prev === "medio") cntMedio = Math.max(0, cntMedio-1);
+    else if(prev === "hard")  cntHard  = Math.max(0, cntHard-1);
+    // Remove from cardRatings array
+    for(var j=cardRatings.length-1; j>=0; j--) {
+      if(cardRatings[j].card === t.cards[i]) { cardRatings.splice(j,1); break; }
+    }
+  }
+  initHome();
+}
+
+function rate(difficulty) {
+  var card = pending.shift();
+
+  // Subtract previous rating for this card
+  var prev = getRating(card);
+  if(prev === "easy")  cntEasy--;
+  else if(prev === "medio") cntMedio--;
+  else if(prev === "hard")  cntHard--;
+
+  // Apply new rating
+  if(difficulty === "easy") {
+    done++; cntEasy++;
+  } else if(difficulty === "medio") {
+    cntMedio++;
+    reinsert(card, 5);
+  } else {
+    cntHard++;
+    reinsert(card, 2);
+  }
+
+  setRating(card, difficulty);
+  render();
+}
+
+// Nav: browse without rating (no spaced rep effect)
+function next() {
+  if(pending.length > 1) {
+    // move current card to end without rating it
+    var card = pending.shift();
+    pending.push(card);
+    render();
+  }
+}
+function prev() {
+  if(pending.length > 1) {
+    // move last card to front
+    var card = pending.pop();
+    pending.unshift(card);
+    render();
+  }
+}
+
+function doShuffle(arr){
+  for(var i=arr.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var tmp=arr[i];arr[i]=arr[j];arr[j]=tmp;
+  }
+}
+function shuffleRender(){
+  doShuffle(pending); render();
+}
+
+// ── TOUCH + CLICK ON CARD ─────────────────────────────────────────
 var ca=document.getElementById("cardArea");
+var lastTouchFlip = 0; // timestamp to avoid double-fire on mobile
 ca.addEventListener("touchstart",function(e){tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;tt0=Date.now();wasSwiping=false;},{passive:true});
 ca.addEventListener("touchmove",function(e){var dx=e.touches[0].clientX-tx0,dy=e.touches[0].clientY-ty0;if(Math.abs(dx)>12&&Math.abs(dx)>Math.abs(dy))wasSwiping=true;},{passive:true});
 ca.addEventListener("touchend",function(e){
   var dx=e.changedTouches[0].clientX-tx0,dy=e.changedTouches[0].clientY-ty0,dt=Date.now()-tt0;
   if(wasSwiping&&Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){if(dx<0)next();else prev();}
-  else if(!wasSwiping&&dt<400&&Math.abs(dx)<15&&Math.abs(dy)<15){doFlip();}
+  else if(!wasSwiping&&dt<400&&Math.abs(dx)<15&&Math.abs(dy)<15){lastTouchFlip=Date.now();doFlip();}
   wasSwiping=false;
 },{passive:true});
 
+// Click on the card flips it (desktop). Ignored on mobile to avoid double-fire.
+document.getElementById("cardWrap").addEventListener("click",function(){
+  if(Date.now()-lastTouchFlip > 400) doFlip();
+});
+
+// ── BUTTONS ───────────────────────────────────────────────────────
 document.getElementById("btnStudyAll").addEventListener("click",startAll);
 document.getElementById("btnBack").addEventListener("click",function(){show("home");initHome();});
 document.getElementById("btnPrev").addEventListener("click",prev);
 document.getElementById("btnFlip").addEventListener("click",doFlip);
 document.getElementById("btnNext").addEventListener("click",next);
 document.getElementById("btnShuf").addEventListener("click",shuffleRender);
-document.getElementById("btnRestart").addEventListener("click",function(){if(!deckSource)return;deck=deckSource.slice();idx=0;flipped=false;show("study");render();});
-document.getElementById("btnRestartS").addEventListener("click",function(){if(!deckSource)return;deck=deckSource.slice();doShuffle(deck);idx=0;flipped=false;show("study");render();});
+document.getElementById("btnEasy").addEventListener("click",function(){rate("easy");});
+document.getElementById("btnMedio").addEventListener("click",function(){rate("medio");});
+document.getElementById("btnHard").addEventListener("click",function(){rate("hard");});
+document.getElementById("btnRestart").addEventListener("click",function(){
+  if(!deckSource)return; pending=buildDeck(deckSource); done=0; show("study"); render();
+});
+document.getElementById("btnRestartS").addEventListener("click",function(){
+  if(!deckSource)return; pending=buildDeck(deckSource); doShuffle(pending); done=0; show("study"); render();
+});
 document.getElementById("btnHome2").addEventListener("click",function(){show("home");initHome();});
 
+// ── KEYBOARD ──────────────────────────────────────────────────────
 document.addEventListener("keydown",function(e){
   if(!document.getElementById("study").classList.contains("active"))return;
-  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();next();}
-  else if(e.key==="ArrowLeft"){e.preventDefault();prev();}
-  else if(e.key==="Enter"||e.key==="f")doFlip();
+  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault(); if(flipped) rate("medio"); else next();}
+  else if(e.key==="ArrowLeft"){e.preventDefault(); prev();}
+  else if(e.key==="Enter"||e.key==="f") doFlip();
+  else if(e.key==="1") rate("easy");
+  else if(e.key==="2") rate("medio");
+  else if(e.key==="3") rate("hard");
 });
 
+// ── INIT ──────────────────────────────────────────────────────────
 initHome();
 })();
 </script>
