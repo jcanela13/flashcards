@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Radiof&#237;sica Hospitalaria</title>
+<style>
+:root{
+  --bg:#0f0f0f;
+  --sur:#181818;
+  --sur2:#202020;
+  --crd:#1c1c1c;
+  --crdb:#141414;
+  --txt:#f0f0f0;
+  --txt2:#a0a0a0;
+  --txt3:#585858;
+  --brd:#2a2a2a;
+  --brd2:#333;
+  --acc:#ffffff;
+  --acc-dim:rgba(255,255,255,.08);
+  --acc-border:rgba(255,255,255,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,sans-serif;}
+
+/* ── SCREENS ── */
+.screen{display:none;flex-direction:column;}
+.screen.active{display:flex;}
+#home{min-height:100vh;overflow-y:auto;background:var(--bg);}
+#study{position:fixed;inset:0;overflow:hidden;background:var(--bg);}
+#done{position:fixed;inset:0;overflow:hidden;background:var(--bg);align-items:center;justify-content:center;padding:40px 24px;text-align:center;}
+
+/* ── HOME HEADER ── */
+.home-top{padding:40px 22px 28px;border-bottom:1px solid var(--brd);}
+.app-label{
+  font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--txt3);margin-bottom:10px;
+}
+.app-title{
+  font-size:clamp(26px,7vw,36px);font-weight:800;letter-spacing:-.02em;
+  color:var(--txt);line-height:1.05;margin-bottom:6px;
+}
+.app-sub{font-size:13px;color:var(--txt3);}
+
+/* ── STATS BAR ── */
+.stats-bar{display:flex;gap:1px;background:var(--brd);border-bottom:1px solid var(--brd);}
+.stat{flex:1;background:var(--bg);padding:16px 12px;text-align:center;}
+.stat-n{font-size:20px;font-weight:700;color:var(--txt);line-height:1;font-variant-numeric:tabular-nums;}
+.stat-l{font-size:9px;color:var(--txt3);margin-top:4px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;}
+
+/* ── STUDY ALL BUTTON ── */
+.study-all-wrap{padding:16px 22px;}
+.btn-study-all{
+  width:100%;padding:15px 20px;
+  background:var(--txt);border:none;border-radius:12px;
+  color:var(--bg);font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.btn-study-all:active{opacity:.85;}
+.btn-study-all .cnt{
+  background:rgba(0,0,0,.15);border-radius:100px;
+  padding:2px 9px;font-size:11px;font-weight:600;
+}
+
+/* ── TOPIC LIST ── */
+.topics-label{
+  padding:20px 22px 8px;
+  font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--txt3);
+}
+.topic-list{padding:0 22px 48px;display:flex;flex-direction:column;gap:1px;background:var(--brd);}
+/* wrap needed so gap+background trick works for dividers */
+.topic-list-inner{display:flex;flex-direction:column;}
+
+.topic-row{
+  background:var(--bg);
+  padding:14px 16px;
+  display:flex;align-items:center;gap:13px;
+  text-align:left;width:100%;font-family:inherit;color:var(--txt);
+  border:none;cursor:pointer;
+}
+.topic-row.has-cards:active{background:var(--sur);}
+.topic-row.empty{opacity:.4;cursor:default;}
+
+.topic-num{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;flex-shrink:0;
+  font-variant-numeric:tabular-nums;
+  background:var(--sur2);color:var(--txt2);
+}
+.topic-row.has-cards .topic-num{background:var(--acc);color:var(--bg);}
+.topic-info{flex:1;min-width:0;}
+.topic-name{font-size:13px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.topic-meta{font-size:11px;color:var(--txt3);margin-top:2px;}
+.topic-arrow{font-size:16px;color:var(--txt3);flex-shrink:0;}
+
+/* ── STUDY HEADER ── */
+.shdr{
+  padding:14px 18px 12px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--brd);flex-shrink:0;
+}
+.btn-back{
+  background:var(--sur);border:1px solid var(--brd);border-radius:9px;
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:17px;color:var(--txt2);flex-shrink:0;font-family:inherit;
+}
+.deck-name{font-size:12px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--txt2);}
+.prog-txt{font-size:12px;color:var(--txt3);flex-shrink:0;font-variant-numeric:tabular-nums;}
+.prog-wrap{height:2px;background:var(--brd);flex-shrink:0;}
+.prog-bar{height:100%;background:var(--txt);transition:width .35s ease;width:0%;}
+
+/* ── CARD ── */
+.card-area{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;overflow:hidden;touch-action:pan-y;}
+.card-scene{width:100%;max-width:400px;}
+.card-wrap{position:relative;width:100%;aspect-ratio:3/4.2;}
+.card-inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.4,0,.2,1);will-change:transform;cursor:pointer;}
+.card-inner.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;display:flex;flex-direction:column;overflow:hidden;}
+.card-face.front{background:var(--crd);border:1px solid var(--brd2);box-shadow:0 12px 40px rgba(0,0,0,.6);}
+.card-face.back{background:var(--sur2);border:1px solid var(--brd2);transform:rotateY(180deg);box-shadow:0 12px 40px rgba(0,0,0,.6);}
+.card-tag{padding:14px 16px 0;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.pill{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:100px;}
+.pq{background:var(--acc-dim);color:var(--txt2);border:1px solid var(--acc-border);}
+.pa{background:rgba(255,255,255,.12);color:var(--txt);border:1px solid rgba(255,255,255,.2);}
+.card-num{font-size:10px;color:var(--txt3);margin-left:auto;font-variant-numeric:tabular-nums;}
+.card-body{flex:1;display:flex;align-items:center;justify-content:center;padding:14px 20px;overflow-y:auto;}
+.cq{font-size:clamp(15px,4.5vw,20px);line-height:1.45;text-align:center;color:var(--txt);font-weight:600;}
+.ca{font-size:clamp(12px,3.2vw,15px);line-height:1.65;text-align:center;color:var(--txt);}
+.ca strong{color:#fff;font-weight:700;}
+.ca em{color:var(--txt2);font-style:normal;font-weight:500;}
+.ca code{font-size:.85em;background:rgba(255,255,255,.08);padding:1px 7px;border-radius:4px;color:var(--txt);font-family:monospace;border:1px solid var(--brd2);}
+.card-hint{padding:0 16px 12px;text-align:center;font-size:10px;color:var(--txt3);opacity:.6;flex-shrink:0;}
+
+/* ── STUDY CONTROLS ── */
+.study-controls{padding:8px 16px 28px;flex-shrink:0;}
+.ctrl-row{display:flex;gap:8px;margin-bottom:8px;}
+.btn-nav{
+  flex:1;padding:13px;border:1px solid var(--brd);border-radius:12px;
+  background:var(--sur);color:var(--txt2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-family:inherit;font-weight:600;font-size:13px;
+}
+.btn-nav:active{background:var(--sur2);}
+.btn-flip{
+  background:var(--txt)!important;border-color:var(--txt)!important;
+  color:var(--bg)!important;flex:2;
+}
+.btn-flip:active{opacity:.85!important;}
+.btn-shuf{
+  width:100%;padding:12px;border:1px solid var(--brd);border-radius:12px;
+  background:transparent;color:var(--txt3);font-size:12px;cursor:pointer;
+  font-family:inherit;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-shuf:active{background:var(--sur);}
+
+/* ── DONE ── */
+.done-icon{font-size:52px;margin-bottom:16px;}
+.done-title{font-size:26px;font-weight:700;margin-bottom:8px;}
+.done-sub{font-size:13px;color:var(--txt2);margin-bottom:32px;}
+.done-btns{display:flex;flex-direction:column;gap:8px;width:100%;max-width:300px;}
+.done-btns button{padding:14px;border-radius:12px;border:none;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+.done-btns button:active{opacity:.8;}
+.bp{background:var(--txt);color:var(--bg);}
+.bs{background:var(--sur);color:var(--txt);border:1px solid var(--brd)!important;}
+
+@keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.97);}to{opacity:1;transform:none;}}
+.anim{animation:cardIn .28s ease;}
+</style>
+</head>
+<body>
+
+<!-- ═══ HOME ═══ -->
+<div class="screen active" id="home">
+  <div class="home-top">
+    <div class="app-label">Oposici&#243;n RFIR</div>
+    <div class="app-title">Radiof&#237;sica<br>Hospitalaria</div>
+    <div class="app-sub">21 temas &middot; Flashcards para el examen</div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-n" id="statCards">0</div><div class="stat-l">Tarjetas</div></div>
+    <div class="stat"><div class="stat-n" id="statTopics">0/21</div><div class="stat-l">Temas</div></div>
+    <div class="stat"><div class="stat-n" id="statSeen">0</div><div class="stat-l">Vistas</div></div>
+  </div>
+
+  <div class="study-all-wrap">
+    <button class="btn-study-all" id="btnStudyAll">
+      Estudiar todo
+      <span class="cnt" id="allCount">0 tarjetas</span>
+    </button>
+  </div>
+
+  <div class="topics-label">Temario</div>
+  <div class="topic-list" id="topicList"></div>
+</div>
+
+<!-- ═══ STUDY ═══ -->
+<div class="screen" id="study">
+  <div class="shdr">
+    <button class="btn-back" id="btnBack">&#8592;</button>
+    <div class="deck-name" id="deckName">Tema</div>
+    <div class="prog-txt" id="progTxt">1/1</div>
+  </div>
+  <div class="prog-wrap"><div class="prog-bar" id="progBar"></div></div>
+
+  <div class="card-area" id="cardArea">
+    <div class="card-scene">
+      <div class="card-wrap">
+        <div class="card-inner" id="cardInner">
+          <div class="card-face front">
+            <div class="card-tag"><span class="pill pq">Pregunta</span><span class="card-num" id="cnF">01</span></div>
+            <div class="card-body"><div class="cq" id="cardQ"></div></div>
+            <div class="card-hint">Toca para voltear &bull; Desliza para cambiar</div>
+          </div>
+          <div class="card-face back">
+            <div class="card-tag"><span class="pill pa">Respuesta</span><span class="card-num" id="cnB">01</span></div>
+            <div class="card-body"><div class="ca" id="cardA"></div></div>
+            <div class="card-hint">Toca para voltear &bull; Desliza para cambiar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="study-controls">
+    <div class="ctrl-row">
+      <button class="btn-nav" id="btnPrev">&#8592; Ant</button>
+      <button class="btn-nav btn-flip" id="btnFlip">&#8635; Voltear</button>
+      <button class="btn-nav" id="btnNext">Sig &#8594;</button>
+    </div>
+    <button class="btn-shuf" id="btnShuf">&#128256; Barajar</button>
+  </div>
+</div>
+
+<!-- ═══ DONE ═══ -->
+<div class="screen" id="done">
+  <div class="done-icon">&#10003;</div>
+  <div class="done-title">Completado</div>
+  <div class="done-sub" id="doneSub">Has repasado todas las tarjetas</div>
+  <div class="done-btns">
+    <button class="bp" id="btnRestart">Repetir en orden</button>
+    <button class="bp" id="btnRestartS">&#128256; Repetir en aleatorio</button>
+    <button class="bs" id="btnHome2">&#8592; Volver al inicio</button>
+  </div>
+</div>
+
+<script>
+(function() {
+"use strict";
+
+// ================================================================
+//  TEMARIO OFICIAL
+//  Para a&#241;adir tarjetas a un tema:
+//  Busca el tema por su num y a&#241;ade objetos { q:"...", a:"..." }
+//  a su array cards.
+// ================================================================
+var TOPICS = [
+  { num:1,  name:"Magnitudes y Unidades",         cards:[] },
+  { num:2,  name:"Matem&#225;ticas",                      cards:[] },
+  { num:3,  name:"Estad&#237;stica y Probabilidad",       cards:[] },
+  { num:4,  name:"Inform&#225;tica",                      cards:[] },
+  { num:5,  name:"Semiconductores",                cards:[] },
+  { num:6,  name:"Electr&#243;nica",                      cards:[] },
+  { num:7,  name:"F&#237;sica Molecular",                 cards:[] },
+  { num:8,  name:"Estado S&#243;lido",                    cards:[] },
+  { num:9,  name:"Aceleradores",                   cards:[] },
+  {
+    num:10,
+    name:"Interacci&#243;n Radiaci&#243;n Materia",
+    cards:[
+      // ── CLASIFICACI&#211;N DE RADIACIONES ──────────────────────
+      {
+        q:"&#191;Qu&#233; es la ionizaci&#243;n?",
+        a:"Ocurre cuando <strong>E<sub>inc</sub> &gt; E<sub>enlace</sub></strong>: el electr&#243;n abandona el &#225;tomo creando un <em>i&#243;n positivo</em>.<br>Ionizaci&#243;n total: <code>I = N/W</code><br>W<sub>aire</sub> = 33 eV/par"
+      },
+      {
+        q:"&#191;Qu&#233; es la excitaci&#243;n?",
+        a:"E<sub>exc</sub> &lt; E<sub>enlace</sub>: el e&#8315; <strong>no abandona</strong> el &#225;tomo, salta a capas superiores. Al bajar libera energ&#237;a electromagn&#233;tica."
+      },
+      {
+        q:"&#191;Diferencia entre radiaci&#243;n directa e indirectamente ionizante?",
+        a:"<strong>Directamente:</strong> part&#237;culas con carga (e&#8315; r&#225;pidos, hadrones). Transmiten energ&#237;a por interacciones coulombianas.<br><strong>Indirectamente:</strong> sin carga (EM, neutrones). Primero generan una part&#237;cula cargada que luego ioniza."
+      },
+      {
+        q:"&#191;Rangos de energ&#237;a de los Rayos X?",
+        a:"<strong>Blandos:</strong> 0,1&#8211;20 keV<br><strong>Diagn&#243;stico:</strong> 20&#8211;120 keV<br><strong>Ortovoltaje:</strong> 120&#8211;300 keV<br><strong>Energ&#237;a media:</strong> 300 keV&#8211;1 MeV<br><strong>Megavoltaje:</strong> &gt;1 MeV"
+      },
+      {
+        q:"&#191;Diferencia de origen entre Rayos X y Rayos &#947;?",
+        a:"<strong>RX:</strong> origen <em>electr&#243;nico</em> (transiciones entre capas at&#243;micas o frenado de e&#8315; = Bremsstrahlung).<br><strong>Rayos &#947;:</strong> origen <em>nuclear</em> (desexcitaciones nucleares o aniquilaci&#243;n materia&#8211;antimateria)."
+      },
+      {
+        q:"&#191;C&#243;mo se clasifican los neutrones por energ&#237;a?",
+        a:"Ultrafr&#237;os (~&#956;eV) &bull; Fr&#237;os (~meV) &bull; T&#233;rmicos (~0,025 eV) &bull; Lentos (~1 eV) &bull; Intermedios (0,5 eV&#8211;10 keV) &bull; <strong>R&#225;pidos (0,1&#8211;10 MeV)</strong> &bull; Alta energ&#237;a (&gt;100 MeV)"
+      },
+      // ── DESINTEGRACIONES Y ACTIVIDAD ─────────────────────────
+      {
+        q:"&#191;Cu&#225;l es la ley exponencial de desintegraci&#243;n?",
+        a:"<code>N(t) = N&#8320; &middot; e<sup>&#8722;&#955;t</sup></code><br>N&#8320; = n&#250;cleos iniciales; &#955; = constante de desintegraci&#243;n [T&#8315;&#185;]"
+      },
+      {
+        q:"&#191;Qu&#233; es la semivida T&#189; y la vida media &#964;?",
+        a:"<strong>T&#189; = ln2 / &#955;</strong> &#8594; tiempo para reducir N a la mitad.<br><strong>&#964; = 1/&#955;</strong> &#8594; tiempo promedio de vida de un n&#250;cleo."
+      },
+      {
+        q:"&#191;C&#243;mo se define la actividad A(t)?",
+        a:"<code>A(t) = A&#8320; &middot; e<sup>&#8722;&#955;t</sup> = &#955; &middot; N(t)</code><br>Unidades: <strong>Becquerel (Bq)</strong> = 1 desint/s<br>1 Ci = 3,7 &times; 10<sup>10</sup> Bq"
+      },
+      {
+        q:"&#191;Qu&#233; es la actividad espec&#237;fica?",
+        a:"<code>A<sub>esp</sub> = (&#955; / M<sub>i</sub>) &middot; N<sub>A</sub> &middot; e<sup>&#8722;&#955;t</sup></code><br>Para compuestos mixtos:<br><code>A<sub>esp</sub> = &#955; &middot; m&#8321;N<sub>A</sub> / [A(m&#8321;+m&#8322;)]</code>"
+      },
+      {
+        q:"&#191;Qu&#233; es la actividad parcial y la fracci&#243;n de desintegraci&#243;n?",
+        a:"Varias v&#237;as: <code>A<sub>i</sub> = &#955;<sub>i</sub> &middot; N(t)</code><br>Fracci&#243;n: <code>f<sub>i</sub> = &#955;<sub>i</sub> / &#955;</code><br>La suma de todas las &#955;<sub>i</sub> da &#955; total."
+      },
+      {
+        q:"&#191;Qu&#233; es el periodo biol&#243;gico efectivo?",
+        a:"<code>1/T<sub>ef</sub> = 1/T&#189; + 1/T<sub>biol</sub></code><br>Combina la eliminaci&#243;n radiactiva y la biol&#243;gica."
+      },
+      {
+        q:"&#191;Qu&#233; es el equilibrio secular?",
+        a:"Cuando &#955;<sub>B</sub> &gt;&gt; &#955;<sub>A</sub> y t &gt;&gt; T&#189;(B):<br><strong>A<sub>B</sub> = A<sub>A</sub></strong> &#8594; el padre marca el ritmo de desintegraci&#243;n."
+      },
+      {
+        q:"&#191;Qu&#233; es el equilibrio transitorio?",
+        a:"Cuando &#955;<sub>B</sub> &gt; &#955;<sub>A</sub>:<br><code>A<sub>B</sub>/A<sub>A</sub> = &#955;<sub>B</sub>/(&#955;<sub>B</sub>&#8722;&#955;<sub>A</sub>) &gt; 1</code><br>La actividad del hijo supera la del padre."
+      },
+      {
+        q:"&#191;Qu&#233; describe la ecuaci&#243;n de Bateman?",
+        a:"Actividad de cada elemento en una cadena de desintegraci&#243;n. Para A&#8594;B&#8594;C:<br><code>N<sub>B</sub>(t) = [&#955;<sub>A</sub>N<sub>A0</sub>/(&#955;<sub>B</sub>&#8722;&#955;<sub>A</sub>)] &middot; (e<sup>&#8722;&#955;<sub>A</sub>t</sup> &#8722; e<sup>&#8722;&#955;<sub>B</sub>t</sup>)</code>"
+      },
+      {
+        q:"&#191;C&#243;mo se modela el bombardeo con part&#237;culas?",
+        a:"Se reemplaza &#955;<sub>A</sub> por <code>&#966; &middot; &#963;</code>:<br>&#966; = flujo de part&#237;culas; &#963; = secci&#243;n eficaz<br>Tasa de producci&#243;n: <code>R = &#966; &middot; &#963; &middot; N<sub>A</sub></code>"
+      },
+      // ── FUENTES DE ELECTRONES R&#193;PIDOS ──────────────────────
+      {
+        q:"&#191;C&#243;mo es el decaimiento &#946;&#8314;?",
+        a:"N&#250;cleos con <strong>exceso de protones</strong>.<br><code>X &#8594; Y + e&#8314; + &#957;<sub>e</sub></code><br>Suele acompa&#241;arse de aniquilaci&#243;n: e&#8314;e&#8315; &#8594; 2&#947; (0,511 MeV)<br><code>Q = M(A,Z) &#8722; M(A,Z&#8722;1) &#8722; 2m<sub>e</sub></code>"
+      },
+      {
+        q:"&#191;C&#243;mo es el decaimiento &#946;&#8315;?",
+        a:"N&#250;cleos con <strong>exceso de neutrones</strong>.<br><code>X &#8594; Y + e&#8315; + &#7745;<sub>e</sub></code><br><code>Q = M(A,Z) &#8722; M(A,Z+1)</code>"
+      },
+      {
+        q:"&#191;C&#243;mo es el espectro de energ&#237;a de la part&#237;cula &#946;?",
+        a:"Espectro <strong>continuo</strong> de 0 a Q (la energ&#237;a se reparte entre la part&#237;cula y el neutrino).<br>Energ&#237;a media: <code>E<sub>media</sub> = &#8531; E<sub>max</sub></code>"
+      },
+      {
+        q:"&#191;Qu&#233; son los diagramas de Kurie?",
+        a:"Representaci&#243;n de <code>&radic;(N(p)/p&#178;F(p))</code> frente a T.<br>&bull; L&#237;nea recta para transiciones permitidas<br>&bull; Corte con eje x &#8594; valor de Q<br>&bull; Permite obtener la <strong>masa del neutrino</strong>"
+      },
+      {
+        q:"&#191;Diferencia entre transiciones de Fermi y Gamow-Teller?",
+        a:"<strong>Fermi (F):</strong> espines &#946; y &#957; antiparalelos; S=0; &#916;I=0; &#916;&#960;=NO. Superpermitida: 0&#8314;&#8594;0&#8314;<br><strong>Gamow-Teller (GT):</strong> espines alineados; S=1; &#916;I=0,&#177;1; &#916;&#960;=NO"
+      },
+      {
+        q:"&#191;Qu&#233; es la conversi&#243;n interna?",
+        a:"Estado nuclear excitado transfiere energ&#237;a directamente a un e&#8315; orbital. Electrones <strong>pr&#225;cticamente monoenerg&#233;ticos</strong>.<br><code>E<sub>e</sub> = E<sub>exc</sub> &#8722; E<sub>b</sub></code>"
+      },
+      {
+        q:"&#191;Qu&#233; son los electrones Auger?",
+        a:"An&#225;logos a la conversi&#243;n interna pero con <strong>excitaci&#243;n at&#243;mica</strong>. Una vacante orbital libera energ&#237;a que expulsa otro e&#8315;. Energ&#237;as bajas, espectro discreto, m&#225;s com&#250;n en Z bajo."
+      },
+      {
+        q:"&#191;Qu&#233; es la captura electr&#243;nica?",
+        a:"El n&#250;cleo captura un e&#8315; de las capas internas del &#225;tomo (compite con &#946;&#8314;).<br><code>Q = M(A,Z) &#8722; M(A,Z&#8722;1) &#8722; B<sub>e</sub></code><br>Genera RX caracter&#237;sticos y electrones Auger."
+      },
+      // ── ALFA, GAMMA Y RADIACI&#211;N EM ──────────────────────────
+      {
+        q:"&#191;C&#243;mo es el decaimiento alfa?",
+        a:"<code>X &#8594; Y + &#8308;He</code><br>&bull; Mucho poder de ionizaci&#243;n, poco de penetraci&#243;n<br>&bull; E<sub>K</sub> de &#945;: 4&#8211;9 MeV<br>&bull; Vida media: de 0,1 &#956;s a 10 billones de a&#241;os"
+      },
+      {
+        q:"&#191;Qu&#233; describe la teor&#237;a de emisi&#243;n alfa de Gamow?",
+        a:"La part&#237;cula &#945; atraviesa la <strong>barrera coulombiana</strong> por efecto t&#250;nel:<br><code>&#955; = f &middot; P = f &middot; e<sup>&#8722;2G</sup></code><br>G = factor de Gamow. P depende exponencialmente de la energ&#237;a."
+      },
+      {
+        q:"&#191;Qu&#233; establece la Ley de Geiger-Nutall?",
+        a:"Para n&#250;cleos par-par: ln(T&#189;) vs ln(Q) da <strong>pendiente muy grande y negativa</strong>. Peque&#241;a variaci&#243;n en Q &#8594; gran variaci&#243;n en T&#189;. Q decrece con A."
+      },
+      {
+        q:"&#191;C&#243;mo ocurre la desintegraci&#243;n gamma?",
+        a:"N&#250;cleo excitado &#8594; estado fundamental: emite fot&#243;n &#947; con <code>E&#947; = &#948;E</code>.<br>Espectro <strong>discreto</strong>, 0,1&#8211;10 MeV.<br>Transici&#243;n 0&#8314;&#8594;0&#8314; est&#225; <em>PROHIBIDA</em> (ocurre por conversi&#243;n interna)."
+      },
+      {
+        q:"&#191;Qu&#233; es la multipolaridad en desintegraci&#243;n gamma?",
+        a:"L=0: sin radiaci&#243;n &bull; L=1: transici&#243;n dipolar (E&#8321;,M&#8321;) &bull; L=n: orden 2&#8319;<br>&#948;&#960;(E&#8345;)=(&#8722;1)&#8319;; &#948;&#960;(M&#8345;)=(&#8722;1)&#8319;&#8314;&#185;<br>M&#225;s probables: menor L, menor &#948;I, el&#233;ctricas."
+      },
+      {
+        q:"&#191;Qu&#233; es el efecto M&#246;ssbauer?",
+        a:"En <strong>redes cristalinas</strong> el retroceso nuclear es despreciable &#8594; <em>fluorescencia resonante nuclear</em>. La espectroscop&#237;a M&#246;ssbauer analiza la simetr&#237;a electr&#243;nica cercana al n&#250;cleo."
+      },
+      {
+        q:"&#191;Qu&#233; es el Bremsstrahlung?",
+        a:"Radiaci&#243;n EM al frenar un e&#8315; en campo nuclear.<br>&bull; Espectro continuo hasta E<sub>electr&#243;n</sub><br>&bull; Aumenta con la energ&#237;a y con Z del medio<br>&bull; P &#8733; Z&#178;/m&#178; &#8594; mayor para part&#237;culas ligeras"
+      },
+      {
+        q:"&#191;Qu&#233; son los rayos X caracter&#237;sticos?",
+        a:"Al llenarse una vacante en capa K con un e&#8315; de capa L se emite <strong>RX K&#945;</strong>. Espectro discreto. Energ&#237;a = diferencia de energ&#237;as de enlace entre capas."
+      },
+      // ── FUENTES DE NEUTRONES Y NEUTRINOS ─────────────────────
+      {
+        q:"&#191;C&#243;mo se generan neutrones por fisi&#243;n espont&#225;nea?",
+        a:"N&#250;clidos transuranicos pesados fisionan espont&#225;neamente emitiendo <strong>neutrones r&#225;pidos</strong>. Ej: <em>&#178;&#8309;&#178;Cf</em>. El is&#243;topo se encapsula para que solo escapen neutrones y rayos &#947;."
+      },
+      {
+        q:"&#191;Qu&#233; reacciones de fusi&#243;n producen neutrones?",
+        a:"<code>&#178;H + &#178;H &#8594; &#179;He + n + 3,27 MeV</code><br><code>&#179;H + &#178;H &#8594; &#8308;He + n + 17,59 MeV</code>"
+      },
+      {
+        q:"&#191;Qu&#233; son las fuentes (&#945;,n)?",
+        a:"Una part&#237;cula &#945; de un radiois&#243;topo de bajo Z reacciona con el material blanco generando neutrones. Ej: Be, Am.<br>&bull; Fuentes peque&#241;as y manejables<br>&bull; Baja producci&#243;n (~10&#8311; n/s)"
+      },
+      {
+        q:"&#191;Qu&#233; aceleradores generan neutrones?",
+        a:"&bull; Acelerador de Van der Graaf<br>&bull; Acelerador Cockcroft-Walton<br>&bull; Ciclotr&#243;n<br>&bull; Espectr&#243;grafo de emisi&#243;n"
+      },
+      {
+        q:"&#191;Cu&#225;les son las propiedades del neutrino?",
+        a:"&bull; Fermi&#243;n, s = &#189; &bull; Carga nula, masa casi nula<br>&bull; N&#250;mero lept&#243;nico: +1 (&#957;), &#8722;1 (&#957;&#772;)<br>&bull; Interacciona muy poco con la materia<br>&bull; Helicidad positiva (dextr&#243;gira) o negativa (lev&#243;gira)<br>&bull; Descubierto por <em>Reines y Cowan</em>"
+      },
+      {
+        q:"&#191;C&#243;mo funciona la dataci&#243;n con &#185;&#8308;C?",
+        a:"El &#185;&#8308;C se acumula en seres vivos mientras viven. Al morir, decrece:<br><code>A = A&#8320; &middot; e<sup>&#8722;&#955;t</sup></code><br><strong>T&#189;(&#185;&#8308;C) = 5730 a&#241;os</strong>"
+      },
+      // ── INTERACCI&#211;N PART&#205;CULAS CARGADAS ─────────────────────
+      {
+        q:"&#191;C&#243;mo se clasifica la interacci&#243;n coulombiana seg&#250;n b?",
+        a:"<strong>b &gt;&gt; a (blanda):</strong> &#225;tomo como todo &#8594; excitaci&#243;n. La m&#225;s probable.<br><strong>b ~ a (dura):</strong> colisi&#243;n con e&#8315; orbital &#8594; ionizaci&#243;n, rayos &#948;.<br><strong>b &lt;&lt; a:</strong> campo nuclear &#8594; Bremsstrahlung (e&#8315;) o colisi&#243;n inel&#225;stica (pesadas)."
+      },
+      {
+        q:"&#191;Qu&#233; es el poder de frenado S(E)?",
+        a:"<code>S(E) = &#8722;dE/dx = S<sub>col</sub> + S<sub>rad</sub></code> [MeV/cm]<br>S<sub>col</sub>: colisiones (ionizaci&#243;n/excitaci&#243;n)<br>S<sub>rad</sub>: Bremsstrahlung<br>S<sub>rad</sub> &gt; S<sub>col</sub> solo a energ&#237;as muy altas."
+      },
+      {
+        q:"&#191;Qu&#233; es la energ&#237;a cr&#237;tica?",
+        a:"Energ&#237;a en que S<sub>rad</sub> = S<sub>col</sub>:<br><code>E<sub>c</sub> &#8776; 610/(Z+1,24) MeV</code> (s&#243;lidos)<br><code>E<sub>c</sub> &#8776; 710/(Z+0,92) MeV</code> (gases)"
+      },
+      {
+        q:"&#191;Cu&#225;l es la f&#243;rmula de Bethe-Bloch?",
+        a:"Para part&#237;culas pesadas sin esp&#237;n (m &gt;&gt; m<sub>e</sub>):<br><code>S<sub>col</sub> = K &middot; (Z/A) &middot; (z&#178;/&#946;&#178;) &middot; [log(2m<sub>e</sub>c&#178;&#946;&#178;/I(1&#8722;&#946;&#178;)) &#8722; &#946;&#178; &#8722; C/Z &#8722; &#948;/2]</code><br>No depende de la masa del proyectil. A bajas v: &#8733; 1/v&#178;."
+      },
+      {
+        q:"&#191;Qu&#233; es el LET (Linear Energy Transfer)?",
+        a:"Fracci&#243;n del poder de frenado por colisiones con transferencia menor a un umbral &#916;.<br><code>LET<sub>&#916;</sub> = (dE<sub>&#916;</sub>/dx)</code><br>Para bajas energ&#237;as: <code>LET<sub>&#916;</sub> &#8776; &#8722;S<sub>col</sub></code>"
+      },
+      {
+        q:"&#191;Qu&#233; es la ionizaci&#243;n espec&#237;fica?",
+        a:"Pares i&#243;nicos por unidad de longitud:<br><code>I<sub>e</sub> = &#8722;(1/W) &middot; (dE/dx)<sub>col</sub> [cm&#8315;&#185;]</code><br>W = energ&#237;a media por ionizaci&#243;n (aire: 33 eV)"
+      },
+      {
+        q:"&#191;Qu&#233; es el pico de Bragg?",
+        a:"Gr&#225;fica de ionizaci&#243;n vs profundidad: aparece un <strong>pico agudo</strong> cerca del rango, donde S<sub>col</sub> &#8733; 1/v&#178; &#8594; m&#225;xima p&#233;rdida de energ&#237;a justo antes de detenerse. Clave en <em>radioterapia de c&#225;ncer</em>."
+      },
+      {
+        q:"&#191;Qu&#233; tipos de rango existen?",
+        a:"<strong>Rango medio:</strong> anchura que reduce part&#237;culas a la mitad.<br><strong>Rango extrapolado:</strong> extrapolaci&#243;n lineal de la transmisi&#243;n a cero.<br><strong>Rango m&#225;ximo:</strong> espesor m&#225;ximo que puede atravesar alguna part&#237;cula. Es el mayor."
+      },
+      {
+        q:"&#191;Qu&#233; es el straggling?",
+        a:"Conversi&#243;n del haz en <strong>no monoenerg&#233;tico</strong> al propagarse. Las part&#237;culas con m&#225;s energ&#237;a pierden m&#225;s y se frenan antes."
+      },
+      {
+        q:"&#191;Relaciones de escala del rango entre part&#237;culas y materiales?",
+        a:"Mismo medio, dos part&#237;culas A y B:<br><code>R<sub>A</sub>/R<sub>B</sub> = (z&#178;<sub>B</sub>/z&#178;<sub>A</sub>) &middot; (M<sub>A</sub>/M<sub>B</sub>)</code><br>Distintos medios (Bragg-Kleemann):<br><code>R&#8322;/R&#8321; &#8776; (&#961;&#8321; &middot; &radic;A&#8322;) / (&#961;&#8322; &middot; &radic;A&#8321;)</code>"
+      },
+      // ── INTERACCI&#211;N ELECTRONES&#8211;MATERIA ──────────────────────
+      {
+        q:"&#191;Qu&#233; es la radiaci&#243;n Cherenkov?",
+        a:"Emitida cuando una part&#237;cula cargada viaja en un diel&#233;ctrico a <strong>v &gt; c/n</strong> (velocidad de fase).<br><code>cos(&#952;) = 1/(n&#946;)</code><br>Color <em>azul</em> caracter&#237;stico."
+      },
+      {
+        q:"&#191;C&#243;mo se calcula el poder de frenado radiativo de electrones?",
+        a:"F&#243;rmula de Bethe-Heitler:<br><code>S<sub>rad</sub> &#8733; &#961;N<sub>A</sub>Z&#178;E<sub>e</sub>/A</code><br>&bull; Depende de Z&#178; (vs Z del poder de colisi&#243;n)<br>&bull; Crece con E<sub>e</sub> &#8594; dominante a altas energ&#237;as"
+      },
+      {
+        q:"&#191;Qu&#233; es la retrodispersi&#243;n (albedo) de electrones?",
+        a:"Los e&#8315; pueden retrodispersarse (&#952; &gt; 90&#176;).<br>&bull; Crece con grosor y Z del material<br>&bull; Se satura a partir de un espesor de saturaci&#243;n<br>&bull; Mayor en e&#8315; que en part&#237;culas pesadas"
+      },
+      {
+        q:"&#191;Qu&#233; es la longitud de radiaci&#243;n X&#8320;?",
+        a:"Distancia a la que un e&#8315; pierde <strong>1&#8722;1/e &#8776; 63%</strong> de su energ&#237;a por Bremsstrahlung.<br><code>X&#8320;/&#961; [g&middot;cm&#8315;&#178;] = 716,4A / [Z(Z+1)&middot;log(287/&radic;Z)]</code>"
+      },
+      {
+        q:"&#191;Qu&#233; es el scattering m&#250;ltiple?",
+        a:"M&#250;ltiples deflexiones coulombianas peque&#241;as.<br><code>&#952;&#8320; = (13,6/&#946;cp) &middot; z &middot; &radic;(x&#961;/X&#8320;) &middot; [1+0,038&middot;ln(x&#961;/X&#8320;)]</code>"
+      },
+      // ── INTERACCI&#211;N EM&#8211;MATERIA ───────────────────────────────
+      {
+        q:"&#191;Qu&#233; procesos dominan la interacci&#243;n fot&#243;n&#8211;materia seg&#250;n la energ&#237;a?",
+        a:"&bull; <strong>Efecto fotoel&#233;ctrico:</strong> &lt;100 keV<br>&bull; <strong>Efecto Compton:</strong> 100 keV&#8211;10 MeV<br>&bull; <strong>Producci&#243;n de pares:</strong> &gt;10 MeV<br>Subdominantes: Rayleigh, Thomson, tripletes, fotonucleares."
+      },
+      {
+        q:"&#191;Qu&#233; es el efecto fotoel&#233;ctrico?",
+        a:"Fot&#243;n desaparece &#8594; e&#8315; sale con <code>E<sub>e</sub> = h&#957; &#8722; W</code>.<br>Secci&#243;n eficaz: <code>&#964;<sub>a</sub> &#8733; Z&#8308;/(h&#957;)&#179;</code><br>Naturaleza <em>resonante</em> (bordes de absorci&#243;n).<br>Genera RX caracter&#237;sticos y electrones Auger."
+      },
+      {
+        q:"&#191;Qu&#233; es el efecto Compton?",
+        a:"Fot&#243;n choca con e&#8315; d&#233;bilmente ligado. Fot&#243;n dispersado a &#952;, e&#8315; a &#966;.<br><code>&#916;&#955; = &#955;<sub>C</sub>(1&#8722;cos&#952;)</code>; &#955;<sub>C</sub> = 2,4 pm<br>Secci&#243;n eficaz: <code>&#963;<sub>C,a</sub> &#8733; Z/(h&#957;)</code>"
+      },
+      {
+        q:"&#191;C&#243;mo es el espectro gamma medido por un detector?",
+        a:"&bull; <strong>Fotopico:</strong> toda la energ&#237;a depositada (efecto fotoel&#233;ctrico)<br>&bull; <strong>Continuo Compton:</strong> transferencia parcial<br>&bull; <strong>Borde Compton:</strong> m&#225;x. energ&#237;a transferida (&#952;=&#960;)<br>&bull; <strong>Pico de retrodispersi&#243;n:</strong> ~190&#8211;200 keV"
+      },
+      {
+        q:"&#191;Qu&#233; es la producci&#243;n de pares?",
+        a:"Fot&#243;n &#8594; par e&#8315;e&#8314; en campo del n&#250;cleo.<br>Energ&#237;a m&#237;nima: <code>h&#957;<sub>min</sub> = 2m<sub>e</sub>c&#178; = 1,022 MeV</code><br>Secci&#243;n eficaz: <code>&#954;<sub>a</sub> &#8733; EZ&#178;</code><br>El e&#8314; se aniquila &#8594; 2&#947; de 0,511 MeV."
+      },
+      {
+        q:"&#191;Qu&#233; es la producci&#243;n de tripletes?",
+        a:"Producci&#243;n de pares en campo de un <strong>electr&#243;n</strong>. Se expulsa adem&#225;s el e&#8315; del entorno.<br>Energ&#237;a m&#237;nima: <code>4m<sub>e</sub>c&#178; = 2,044 MeV</code><br>Secci&#243;n eficaz: <code>&#954;<sub>a</sub> &#8733; Z</code>"
+      },
+      {
+        q:"&#191;Qu&#233; es la dispersi&#243;n de Rayleigh?",
+        a:"Interacci&#243;n <strong>el&#225;stica y coherente</strong> del fot&#243;n con el &#225;tomo como un todo.<br>Solo cambia direcci&#243;n, sin p&#233;rdida de energ&#237;a.<br>No ioniza &bull; No contribuye a la dosis ni al kerma.<br><code>&#963;<sub>R,a</sub> &#8733; Z&#178;/(h&#957;)&#178;</code>"
+      },
+      {
+        q:"&#191;Qu&#233; son las reacciones fotonucleares?",
+        a:"Fot&#243;n energ&#233;tico (&gt;1 MeV) excita el n&#250;cleo &#8594; emite prot&#243;n (&#947;,p) o <strong>neutr&#243;n (&#947;,n)</strong>. Energ&#237;a de activaci&#243;n ~10 MeV.<br>&bull; (&#947;,p): contribuye al kerma<br>&bull; (&#947;,n): problema de protecci&#243;n radiol&#243;gica"
+      },
+      {
+        q:"&#191;C&#243;mo se define el coeficiente de atenuaci&#243;n lineal &#956;?",
+        a:"Ley de Beer: <code>I(x) = I(0) &middot; e<sup>&#8722;&#956;x</sup></code><br><code>&#956; = &#963;&#961;N<sub>A</sub>/A</code> [m&#8315;&#185;]<br>Recorrido libre medio: <code>&#955; = 1/&#956;</code>"
+      },
+      {
+        q:"&#191;Qu&#233; es la HVL y la DVL?",
+        a:"<strong>HVL:</strong> espesor que reduce el haz a la mitad. <code>HVL = ln2/&#956;</code><br><strong>DVL:</strong> reduce a 1/10. <code>DVL = ln10/&#956;</code><br><code>HVL/DVL = 0,3</code>"
+      },
+      {
+        q:"&#191;Qu&#233; coeficientes dosim&#233;tricos complementan a &#956;?",
+        a:"&bull; <strong>&#956;<sub>tr</sub>:</strong> transferencia masa-energ&#237;a (energ&#237;a cedida a part&#237;culas cargadas)<br>&bull; <strong>&#956;<sub>ab</sub>:</strong> absorci&#243;n masa-energ&#237;a (energ&#237;a depositada)<br><code>&#956;<sub>ab</sub> = (1&#8722;g) &middot; &#956;<sub>tr</sub></code>; &#956;<sub>ab</sub> &#8804; &#956;<sub>tr</sub> &#8804; &#956;"
+      },
+      // ── INTERACCI&#211;N NEUTRONES&#8211;MATERIA ──────────────────────
+      {
+        q:"&#191;Por qu&#233; los neutrones son muy penetrantes?",
+        a:"Sin carga el&#233;ctrica &#8594; no pierden energ&#237;a por interacci&#243;n coulombiana ni Bremsstrahlung. Solo interact&#250;an a distancias ~1 fm (fuerza nuclear). Interacciones principales: <strong>dispersi&#243;n y absorci&#243;n</strong>."
+      },
+      {
+        q:"&#191;Qu&#233; tipos de dispersi&#243;n de neutrones existen?",
+        a:"<strong>El&#225;stica (n,n):</strong> conserva energ&#237;a cin&#233;tica del sistema. Permite moderar neutrones r&#225;pidos con n&#250;cleos ligeros.<br><strong>Inel&#225;stica (n,n'):</strong> el n&#250;cleo queda excitado y emite &#947;. T&#237;pica de neutrones r&#225;pidos."
+      },
+      {
+        q:"&#191;Qu&#233; es la captura radiativa de neutrones?",
+        a:"El n&#250;cleo absorbe el neutr&#243;n y emite <strong>radiaci&#243;n gamma</strong>. M&#225;s probable para <em>neutrones lentos/t&#233;rmicos</em>, con &#963; &#8733; 1/v. Tambi&#233;n ocurre por resonancia en neutrones intermedios."
+      },
+      {
+        q:"&#191;C&#243;mo interact&#250;an los neutrones r&#225;pidos?",
+        a:"E: 0,1&#8211;10 MeV<br>&bull; Dispersi&#243;n <strong>inel&#225;stica</strong> (principal)<br>&bull; Fisi&#243;n r&#225;pida<br>&bull; Moderador m&#225;s eficiente: <strong>hidr&#243;geno</strong> (puede ceder toda la energ&#237;a en una colisi&#243;n)"
+      },
+      {
+        q:"&#191;C&#243;mo interact&#250;an los neutrones lentos?",
+        a:"E: &lt;1 eV<br>&bull; Fisi&#243;n t&#233;rmica<br>&bull; Dispersi&#243;n el&#225;stica: equilibrio t&#233;rmico con el medio<br>&bull; Captura radiativa: neutr&#243;n absorbido<br>&bull; Puede originar procesos de fusi&#243;n"
+      },
+      {
+        q:"&#191;Qu&#233; son los neutrones intermedios?",
+        a:"E: 0,5 eV&#8211;10 keV<br>&bull; Resonancias: captura electr&#243;nica<br>&bull; Dispersiones inel&#225;sticas: (n,n') y (n,p)"
+      },
+      {
+        q:"&#191;Qu&#233; es la masa cr&#237;tica?",
+        a:"Masa m&#237;nima para que la <strong>reacci&#243;n en cadena de fisi&#243;n</strong> se desarrolle de forma acelerada y explosiva."
+      },
+      {
+        q:"&#191;Qu&#233; es la c&#225;mara de niebla de Wilson?",
+        a:"Detecta part&#237;culas ionizantes. Vapor de agua <strong>superenfriado y supersaturado</strong>. La part&#237;cula ioniza el vapor &#8594; n&#250;cleos de condensaci&#243;n &#8594; traza visible.<br>&bull; Part&#237;cula &#945;: traza <em>ancha y recta</em><br>&bull; Electr&#243;n: traza <em>fina con deflexiones</em>"
+      }
+    ]
+  },
+  { num:11, name:"Detectores",                    cards:[] },
+  { num:12, name:"Protecci&#243;n Radiol&#243;gica",            cards:[] },
+  { num:13, name:"Aplicaciones M&#233;dicas",               cards:[] },
+  { num:14, name:"F&#237;sica Cu&#225;ntica",                    cards:[] },
+  { num:15, name:"F&#237;sica Nuclear",                    cards:[] },
+  { num:16, name:"Part&#237;culas",                         cards:[] },
+  { num:17, name:"Termodin&#225;mica",                      cards:[] },
+  { num:18, name:"Electromagnetismo",              cards:[] },
+  { num:19, name:"Mec&#225;nica",                           cards:[] },
+  { num:20, name:"Relatividad",                    cards:[] },
+  { num:21, name:"&#211;ptica",                            cards:[] }
+];
+
+// ── STATE ─────────────────────────────────────────────────────────
+var deck = [], deckSource = null, idx = 0, flipped = false, seenTotal = 0;
+var tx0=0, ty0=0, tt0=0, wasSwiping=false;
+
+function totalCards() {
+  var n=0; for(var i=0;i<TOPICS.length;i++) n+=TOPICS[i].cards.length; return n;
+}
+function topicsWithCards() {
+  var n=0; for(var i=0;i<TOPICS.length;i++) if(TOPICS[i].cards.length>0) n++; return n;
+}
+function getAllCards() {
+  var out=[];
+  for(var i=0;i<TOPICS.length;i++) for(var j=0;j<TOPICS[i].cards.length;j++) out.push(TOPICS[i].cards[j]);
+  return out;
+}
+
+function show(id) {
+  var all=document.querySelectorAll(".screen");
+  for(var i=0;i<all.length;i++) all[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+}
+
+function initHome() {
+  var total=totalCards();
+  document.getElementById("statCards").textContent = total;
+  document.getElementById("statTopics").textContent = topicsWithCards()+"/21";
+  document.getElementById("statSeen").textContent = seenTotal;
+  document.getElementById("allCount").textContent = total+" tarjeta"+(total!==1?"s":"");
+
+  var tl=document.getElementById("topicList");
+  tl.innerHTML="";
+  for(var i=0;i<TOPICS.length;i++) {
+    (function(t) {
+      var has=t.cards.length>0;
+      var btn=document.createElement("button");
+      btn.className="topic-row "+(has?"has-cards":"empty");
+      btn.innerHTML=
+        "<div class=\"topic-num\">T"+t.num+"</div>"+
+        "<div class=\"topic-info\">"+
+          "<div class=\"topic-name\">"+t.name+"</div>"+
+          "<div class=\"topic-meta\">"+(has ? t.cards.length+" tarjeta"+(t.cards.length!==1?"s":"") : "Sin tarjetas a&#250;n")+"</div>"+
+        "</div>"+
+        "<div class=\"topic-arrow\">"+(has?"&#8250;":"")+"</div>";
+      if(has) btn.addEventListener("click",function(){startTopic(t);});
+      tl.appendChild(btn);
+    })(TOPICS[i]);
+  }
+}
+
+function startAll() {
+  var cards=getAllCards(); if(!cards.length) return;
+  deckSource=cards; deck=cards.slice(); beginStudy("Todo el temario");
+}
+function startTopic(t) {
+  deckSource=t.cards; deck=t.cards.slice();
+  beginStudy("T"+t.num+" \u00b7 "+t.name);
+}
+function beginStudy(name) {
+  idx=0; flipped=false;
+  document.getElementById("deckName").textContent=name;
+  show("study"); render();
+}
+function render() {
+  if(idx>=deck.length) {
+    seenTotal+=deck.length;
+    document.getElementById("doneSub").textContent="Has repasado "+deck.length+" tarjeta"+(deck.length!==1?"s":"");
+    show("done"); initHome(); return;
+  }
+  var c=deck[idx], total=deck.length, n=("0"+(idx+1)).slice(-2);
+  document.getElementById("cardQ").innerHTML=c.q;
+  document.getElementById("cardA").innerHTML=c.a;
+  document.getElementById("cnF").textContent=n+"/"+total;
+  document.getElementById("cnB").textContent=n+"/"+total;
+  document.getElementById("progTxt").textContent=(idx+1)+" / "+total;
+  document.getElementById("progBar").style.width=((idx/total)*100)+"%";
+  var ci=document.getElementById("cardInner");
+  ci.style.transition="none"; ci.classList.remove("flipped"); flipped=false;
+  ci.getBoundingClientRect(); ci.style.transition="";
+  ci.classList.remove("anim"); ci.getBoundingClientRect(); ci.classList.add("anim");
+}
+function doFlip(){flipped=!flipped;document.getElementById("cardInner").classList.toggle("flipped",flipped);}
+function next(){if(idx<deck.length){idx++;render();}}
+function prev(){if(idx>0){idx--;render();}}
+function doShuffle(arr){for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=arr[i];arr[i]=arr[j];arr[j]=tmp;}}
+function shuffleRender(){doShuffle(deck);idx=0;flipped=false;render();}
+
+var ca=document.getElementById("cardArea");
+ca.addEventListener("touchstart",function(e){tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;tt0=Date.now();wasSwiping=false;},{passive:true});
+ca.addEventListener("touchmove",function(e){var dx=e.touches[0].clientX-tx0,dy=e.touches[0].clientY-ty0;if(Math.abs(dx)>12&&Math.abs(dx)>Math.abs(dy))wasSwiping=true;},{passive:true});
+ca.addEventListener("touchend",function(e){
+  var dx=e.changedTouches[0].clientX-tx0,dy=e.changedTouches[0].clientY-ty0,dt=Date.now()-tt0;
+  if(wasSwiping&&Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){if(dx<0)next();else prev();}
+  else if(!wasSwiping&&dt<400&&Math.abs(dx)<15&&Math.abs(dy)<15){doFlip();}
+  wasSwiping=false;
+},{passive:true});
+
+document.getElementById("btnStudyAll").addEventListener("click",startAll);
+document.getElementById("btnBack").addEventListener("click",function(){show("home");initHome();});
+document.getElementById("btnPrev").addEventListener("click",prev);
+document.getElementById("btnFlip").addEventListener("click",doFlip);
+document.getElementById("btnNext").addEventListener("click",next);
+document.getElementById("btnShuf").addEventListener("click",shuffleRender);
+document.getElementById("btnRestart").addEventListener("click",function(){if(!deckSource)return;deck=deckSource.slice();idx=0;flipped=false;show("study");render();});
+document.getElementById("btnRestartS").addEventListener("click",function(){if(!deckSource)return;deck=deckSource.slice();doShuffle(deck);idx=0;flipped=false;show("study");render();});
+document.getElementById("btnHome2").addEventListener("click",function(){show("home");initHome();});
+
+document.addEventListener("keydown",function(e){
+  if(!document.getElementById("study").classList.contains("active"))return;
+  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();next();}
+  else if(e.key==="ArrowLeft"){e.preventDefault();prev();}
+  else if(e.key==="Enter"||e.key==="f")doFlip();
+});
+
+initHome();
+})();
+</script>
+</body>
+</html>
