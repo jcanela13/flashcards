@@ -656,17 +656,40 @@ var TOPICS = [
 ];
 
 // ── STATE ─────────────────────────────────────────────────────────
-// queue: cards still to master this session (pending[0] = current card)
-// done:  count of cards marked Easy (mastered this session)
 var pending = [], done = 0;
 var deckSource = null;
 var flipped = false;
 var seenTotal = 0;
-// Cumulative rating counters (persist across sessions within the page)
+// Counters and per-card ratings — persisted in localStorage
 var cntEasy = 0, cntMedio = 0, cntHard = 0;
-// Per-card last rating: key = card object reference, value = "easy"|"medio"|"hard"
-var cardRatings = [];
+// cardRatings: plain object { [card.q]: "easy"|"medio"|"hard" }
+var cardRatings = {};
 var tx0=0, ty0=0, tt0=0, wasSwiping=false;
+
+var LS_KEY = "rfir_flashcards_v1";
+
+function saveToStorage() {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      ratings: cardRatings,
+      cntEasy: cntEasy,
+      cntMedio: cntMedio,
+      cntHard: cntHard
+    }));
+  } catch(e) {}
+}
+
+function loadFromStorage() {
+  try {
+    var raw = localStorage.getItem(LS_KEY);
+    if(!raw) return;
+    var data = JSON.parse(raw);
+    if(data.ratings) cardRatings = data.ratings;
+    if(typeof data.cntEasy  === "number") cntEasy  = data.cntEasy;
+    if(typeof data.cntMedio === "number") cntMedio = data.cntMedio;
+    if(typeof data.cntHard  === "number") cntHard  = data.cntHard;
+  } catch(e) {}
+}
 
 // ── HELPERS ───────────────────────────────────────────────────────
 function totalCards() {
@@ -883,30 +906,22 @@ function doFlip() {
 
 // ── RATING LOGIC ──────────────────────────────────────────────────
 function getRating(card) {
-  for(var i=0; i<cardRatings.length; i++) {
-    if(cardRatings[i].card === card) return cardRatings[i].rating;
-  }
-  return null;
+  return cardRatings[card.q] || null;
 }
 function setRating(card, rating) {
-  for(var i=0; i<cardRatings.length; i++) {
-    if(cardRatings[i].card === card) { cardRatings[i].rating = rating; return; }
-  }
-  cardRatings.push({ card: card, rating: rating });
+  cardRatings[card.q] = rating;
 }
 
 // Remove stored ratings for all cards in a topic and adjust counters
 function resetTopic(t) {
   for(var i=0; i<t.cards.length; i++) {
     var prev = getRating(t.cards[i]);
-    if(prev === "easy")  cntEasy  = Math.max(0, cntEasy-1);
-    else if(prev === "medio") cntMedio = Math.max(0, cntMedio-1);
-    else if(prev === "hard")  cntHard  = Math.max(0, cntHard-1);
-    // Remove from cardRatings array
-    for(var j=cardRatings.length-1; j>=0; j--) {
-      if(cardRatings[j].card === t.cards[i]) { cardRatings.splice(j,1); break; }
-    }
+    if(prev === "easy")        cntEasy  = Math.max(0, cntEasy-1);
+    else if(prev === "medio")  cntMedio = Math.max(0, cntMedio-1);
+    else if(prev === "hard")   cntHard  = Math.max(0, cntHard-1);
+    delete cardRatings[t.cards[i].q];
   }
+  saveToStorage();
   initHome();
 }
 
@@ -915,7 +930,7 @@ function rate(difficulty) {
 
   // Subtract previous rating for this card
   var prev = getRating(card);
-  if(prev === "easy")  cntEasy--;
+  if(prev === "easy")       cntEasy--;
   else if(prev === "medio") cntMedio--;
   else if(prev === "hard")  cntHard--;
 
@@ -931,6 +946,7 @@ function rate(difficulty) {
   }
 
   setRating(card, difficulty);
+  saveToStorage();
   render();
 }
 
@@ -1007,6 +1023,9 @@ document.addEventListener("keydown",function(e){
   else if(e.key==="2") rate("medio");
   else if(e.key==="3") rate("hard");
 });
+
+// ── INIT ──────────────────────────────────────────────────────────
+loadFromStorage();
 
 // ── PWA MANIFEST ─────────────────────────────────────────────────
 (function() {
