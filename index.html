@@ -154,6 +154,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:system-u
 .pill-q{background:var(--acc-dim);color:var(--txt2);border:1px solid var(--acc-border);}
 .pill-a{background:rgba(255,255,255,.12);color:var(--txt);border:1px solid rgba(255,255,255,.2);}
 .card-num{font-size:10px;color:var(--txt3);margin-left:auto;font-variant-numeric:tabular-nums;}
+.topic-num-badge{font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--txt3);background:var(--sur2);border:1px solid var(--brd);border-radius:100px;padding:2px 7px;font-variant-numeric:tabular-nums;flex-shrink:0;}
 .card-body{flex:1;display:flex;align-items:center;justify-content:center;padding:14px 20px;overflow-y:auto;}
 .txt-q{font-size:clamp(15px,4.5vw,20px);line-height:1.45;text-align:center;color:var(--txt);font-weight:600;}
 .txt-a{font-size:clamp(12px,3.2vw,15px);line-height:1.65;text-align:center;color:var(--txt);}
@@ -283,7 +284,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:system-u
   <div class="card-area" id="cardArea">
     <div class="card-scene">
       <div class="card-wrap" id="cardWrap">
-        <div class="card-tag"><span class="pill" id="cardPill">Pregunta</span><span class="card-num" id="cardNum">01</span></div>
+        <div class="card-tag"><span class="pill" id="cardPill">Pregunta</span><span class="topic-num-badge" id="topicNumBadge"></span><span class="card-num" id="cardNum">01</span></div>
         <div class="card-body"><div id="cardContent"></div></div>
         <div class="card-hint" id="cardHint">Toca para ver la respuesta &bull; Desliza para navegar</div>
       </div>
@@ -642,7 +643,252 @@ var TOPICS = [
       }
     ]
   },
-  { num:11, name:"Detectores",                    cards:[] },
+  {
+    num:11, name:"Detectores",
+    cards:[
+      // ── CLASIFICACI&#211;N Y CONCEPTOS GENERALES ──────────────────
+      {
+        q:"&#191;Qu&#233; tipos de detectores existen seg&#250;n su funci&#243;n?",
+        a:"<strong>Dos&#237;metro:</strong> mide la dosis (ambiental, &#225;rea, personal).<br><strong>Espectr&#243;metro:</strong> mide n&#250;mero de part&#237;culas y su energ&#237;a.<br><strong>Contador:</strong> cuenta part&#237;culas individualmente (ej. Geiger-M&#252;ller)."
+      },
+      {
+        q:"&#191;Qu&#233; diferencia hay entre detector activo y pasivo?",
+        a:"<strong>Activo:</strong> necesita fuente de alimentaci&#243;n <em>mientras se irradia</em> (ej. c&#225;mara de ionizaci&#243;n, Geiger).<br><strong>Pasivo:</strong> no requiere electr&#243;nica durante la irradiaci&#243;n (ej. TLD, pel&#237;cula radiogr&#225;fica)."
+      },
+      {
+        q:"&#191;Qu&#233; diferencia hay entre detector integrador y contador?",
+        a:"<strong>Integrador:</strong> la se&#241;al resulta de <em>m&#250;ltiples</em> interacciones individuales.<br><strong>Contador:</strong> la se&#241;al proviene de <em>una sola</em> interacci&#243;n individual."
+      },
+      {
+        q:"&#191;Qu&#233; es un espectr&#243;metro vs un dos&#237;metro?",
+        a:"<strong>Espectr&#243;metro:</strong> detector que <em>tambi&#233;n mide la energ&#237;a</em> de los eventos.<br><strong>Dos&#237;metro:</strong> detecta la <em>dosis absorbida</em> y la traduce a una lectura."
+      },
+      // ── MODOS DE OPERACI&#211;N ────────────────────────────────────
+      {
+        q:"&#191;Cu&#225;les son los 3 modos de operaci&#243;n de un detector?",
+        a:"<strong>1. Modo corriente:</strong> promedia la se&#241;al en tiempo T &#8594; mide tasa de radiaci&#243;n.<br><strong>2. Modo pulso:</strong> detecta eventos individuales &#8594; espectroscop&#237;a.<br><strong>3. Modo cuadr&#225;tico medio (MSV):</strong> pondera por Q&#178; &#8594; &#250;til para neutrones."
+      },
+      {
+        q:"&#191;C&#243;mo se calcula la corriente promedio en modo corriente?",
+        a:"<code>I = r &middot; Q = r &middot; q &middot; E/W</code><br>r = tasa de eventos; Q = carga por evento; E = energ&#237;a depositada; W = energ&#237;a para crear un par.<br><em>Ventaja:</em> r&#225;pido y sencillo. <em>Desventaja:</em> no da informaci&#243;n individual."
+      },
+      {
+        q:"&#191;Qu&#233; ocurre en modo pulso seg&#250;n la relaci&#243;n RC y t<sub>c</sub>?",
+        a:"<strong>RC &lt;&lt; t<sub>c</sub>:</strong> preserva la forma del pulso &#8594; medida de tiempos.<br><strong>RC &gt;&gt; t<sub>c</sub>:</strong> V<sub>m&#225;x</sub> = Q/C &#8594; medida del espectro de energ&#237;a (caso habitual)."
+      },
+      {
+        q:"&#191;Para qu&#233; sirve el modo cuadr&#225;tico medio (MSV)?",
+        a:"La varianza de la corriente es <code>&#963;&#178;<sub>I</sub> = rQ&#178;/T &#8733; Q&#178;</code>.<br>Pondera la se&#241;al hacia la radiaci&#243;n que genera <strong>mayor carga</strong>. Especialmente &#250;til para <em>discriminar neutrones frente a gamma</em> en reactores."
+      },
+      // ── SENSIBILIDAD, RESOLUCI&#211;N Y EFICIENCIA ─────────────────
+      {
+        q:"&#191;De qu&#233; depende la sensibilidad de un detector?",
+        a:"Capacidad de producir una se&#241;al legible. Depende de: <strong>secci&#243;n eficaz</strong> de ionizaci&#243;n, <strong>masa/volumen</strong> del detector, <strong>ruido</strong> y material de protecci&#243;n.<br>Alta para part&#237;culas cargadas, baja para las neutras."
+      },
+      {
+        q:"&#191;C&#243;mo se define la resoluci&#243;n en energ&#237;a R?",
+        a:"<code>R = FWHM / H&#8320;</code>; FWHM = 2,35&middot;&#963;<br><strong>Detector delgado:</strong> <code>R = 2,35/&#8730;N</code><br><strong>Detector grueso:</strong> <code>R = 2,35&middot;&#8730;(F&middot;W/E)</code><br>F = factor de Fano; W = energ&#237;a/par; E = energ&#237;a depositada."
+      },
+      {
+        q:"&#191;Qu&#233; es el factor de Fano y c&#243;mo var&#237;a seg&#250;n el detector?",
+        a:"Mide la desviaci&#243;n respecto a Poisson: <code>F = &#963;&#178;<sub>exp</sub>/&#963;&#178;<sub>Poisson</sub></code>.<br><em>Centelleador:</em> F &#8776; 1 &bull; <em>Gases nobles:</em> F = 0,1&#8211;0,4 &bull; <em>Semiconductores:</em> F &#8776; 0,1 (mejor resoluci&#243;n).<br>F<sub>Si</sub> &gt; F<sub>Ge</sub>"
+      },
+      {
+        q:"&#191;Qu&#233; tipos de eficiencia existen en un detector?",
+        a:"<strong>Absoluta:</strong> <code>&#949;<sub>abs</sub> = registradas/emitidas = &#949;<sub>int</sub>&middot;&#949;<sub>geo</sub></code><br><strong>Intr&#237;nseca:</strong> <code>&#949;<sub>int</sub> = registradas/incidentes = 1&#8722;e<sup>&#8722;&#956;x</sup></code> (fotones)<br><strong>Geom&#233;trica:</strong> <code>&#949;<sub>geo</sub> = &#937;/4&#960; = r&#178;/4d&#178;</code><br><strong>De pico:</strong> solo eventos que depositan toda la energ&#237;a."
+      },
+      {
+        q:"&#191;C&#243;mo es la eficiencia geom&#233;trica para una c&#225;mara de pozo?",
+        a:"<code>&#949;<sub>geo</sub> = &#189;(1 + cos&#952;)</code><br>La fuente est&#225; <em>rodeada</em> por el detector, lo que incrementa mucho la eficiencia respecto a geometr&#237;a convencional."
+      },
+      // ── TIEMPO MUERTO ─────────────────────────────────────────
+      {
+        q:"&#191;Qu&#233; es el tiempo muerto de un detector?",
+        a:"Tiempo m&#237;nimo entre dos eventos consecutivos para que sean registrados como <strong>eventos distintos</strong>. Puede deberse al propio detector o a la electr&#243;nica asociada."
+      },
+      {
+        q:"&#191;Cu&#225;l es la diferencia entre sistema no paralizable y paralizable?",
+        a:"<strong>No paralizable:</strong> <code>R = m/(1+m&middot;&#964;)</code>; para m&#8594;&#8734;, R&#8594;1/&#964; (satura).<br><strong>Paralizable:</strong> <code>R = m&middot;e<sup>&#8722;m&#964;</sup></code>; m&#225;ximo en m=1/&#964; &#8594; R<sub>m&#225;x</sub>=1/(e&#964;); para m&#8594;&#8734;, R&#8594;0 (se bloquea)."
+      },
+      {
+        q:"&#191;Qu&#233; son los tiempos de resoluci&#243;n y recuperaci&#243;n?",
+        a:"<strong>Resoluci&#243;n:</strong> tiempo para generar un pulso m&#237;nimo contabilizable.<br><strong>Recuperaci&#243;n:</strong> tiempo para volver al estado previo y generar un pulso de <em>plena amplitud</em>. Entre ambos se pueden detectar pulsos de menor intensidad."
+      },
+      // ── ELECTR&#211;NICA ───────────────────────────────────────────
+      {
+        q:"&#191;Cu&#225;l es la cadena electr&#243;nica est&#225;ndar de un detector de pulsos?",
+        a:"<strong>Fuente de alta tensi&#243;n</strong> &#8594; <strong>Preamplificador</strong> (ajusta impedancias, m&#237;nimo ruido) &#8594; <strong>Amplificador</strong> (forma gaussiana) &#8594; <strong>Discriminador</strong> &#8594; <strong>ADC</strong> &#8594; <strong>Analizador multicanal</strong> (histograma de alturas de pulso)."
+      },
+      {
+        q:"&#191;Qu&#233; diferencia hay entre se&#241;ales r&#225;pidas y lentas?",
+        a:"<strong>R&#225;pidas (ns):</strong> cable largo, impedancias equilibradas (~50&#937;), poca atenuaci&#243;n. Para tiempos y altas tasas.<br><strong>Lentas (&#956;s):</strong> cable corto, Z<sub>entrada</sub> alta (1000&#937;), Z<sub>salida</sub> baja (10&#937;). Menos ruido, preservan la altura del pulso. Requieren amplificaci&#243;n."
+      },
+      // ── DETECTORES GASEOSOS ────────────────────────────────────
+      {
+        q:"&#191;Cu&#225;les son las 6 zonas de operaci&#243;n de un detector gaseoso?",
+        a:"1. <em>Recombinaci&#243;n</em> (V&lt;100V) &#8211; in&#250;til<br>2. <strong>Saturaci&#243;n / C&#225;mara de ionizaci&#243;n</strong> (100&#8211;250V)<br>3. <strong>Proporcional</strong> (250&#8211;600V)<br>4. <em>Proporcionalidad limitada</em> (600&#8211;800V) &#8211; in&#250;til<br>5. <strong>Geiger-M&#252;ller</strong> (800&#8211;950V)<br>6. <em>Descarga continua</em> (&gt;950V) &#8211; in&#250;til"
+      },
+      {
+        q:"&#191;Por qu&#233; no se usan las zonas de recombinaci&#243;n, proporcionalidad limitada y descarga continua?",
+        a:"<strong>Recombinaci&#243;n:</strong> voltaje insuficiente, los iones se recombinan antes de llegar al electrodo.<br><strong>Prop. limitada:</strong> acumulaci&#243;n de iones&#8314; &#8594; disminuye el campo &#8594; no lineal.<br><strong>Descarga continua:</strong> avalanchas constantes sin radiaci&#243;n externa &#8594; inservible."
+      },
+      // ── C&#193;MARA DE IONIZACI&#211;N ──────────────────────────────────
+      {
+        q:"&#191;Cu&#225;les son las caracter&#237;sticas principales de la c&#225;mara de ionizaci&#243;n?",
+        a:"V: 100&#8211;250V &bull; Gas: Aire (W=34 eV/par) &bull; Factor multiplicaci&#243;n = 1 &bull; &#964; &#8776; 1&#956;s &bull; Rendimiento: 100% para &#945;/&#946;, 1% para fotones &bull; Requiere <strong>amplificaci&#243;n</strong> &bull; Aplicaciones: <em>dos&#237;metro</em> (modo corriente) y <em>espectr&#243;metro</em> (modo pulso)."
+      },
+      {
+        q:"&#191;Qu&#233; es la caperuza de equilibrio en la c&#225;mara de ionizaci&#243;n?",
+        a:"Casquete de material equivalente a tejido que se a&#241;ade para <strong>mejorar la eficiencia con fotones de alta energ&#237;a</strong>, permitiendo alcanzar las condiciones de <em>equilibrio electr&#243;nico</em> (CPE)."
+      },
+      {
+        q:"&#191;C&#243;mo var&#237;a la carga recogida en una c&#225;mara de ionizaci&#243;n con P y T?",
+        a:"<code>Q = Q&#8320; &middot; (P/P&#8320;) &middot; (T&#8320;/T)</code>; P&#8320; = 1 atm, T&#8320; = 273 K.<br>Si la c&#225;mara es cerrada, <em>no se recalibra</em>. La sensibilidad es proporcional a la masa y al volumen activo."
+      },
+      {
+        q:"&#191;Qu&#233; es la configuraci&#243;n en reja o anillo de guarda?",
+        a:"Tercer electrodo intermedio en la c&#225;mara de ionizaci&#243;n que hace que <strong>solo la carga negativa (e&#8315;)</strong> contribuya a la se&#241;al medida, eliminando corrientes de fuga."
+      },
+      // ── CONTADOR PROPORCIONAL ─────────────────────────────────
+      {
+        q:"&#191;Cu&#225;les son las caracter&#237;sticas del contador proporcional?",
+        a:"V: 250&#8211;600V &bull; Gas: CO&#8322;, BF&#8323; o gas noble &bull; Factor multiplicaci&#243;n: 1&#8211;10&#8311; &bull; &#964; &#8776; 10&#956;s &bull; Pulso &#8733; 2&#170; ionizaciones &bull; Requiere amplificaci&#243;n &bull; <strong>Mejor espectr&#243;metro gaseoso</strong> &bull; Detecta: &#945;, &#946; baja E, neutrones t&#233;rmicos, RX (keV)."
+      },
+      {
+        q:"&#191;Qu&#233; es el efecto Penning en el contador proporcional?",
+        a:"Se introducen mol&#233;culas de gas excitado en el gas de llenado, de forma que la <strong>energ&#237;a necesaria para ionizar es menor</strong>. Se crean estados metaestables que aumentan la multiplicaci&#243;n."
+      },
+      {
+        q:"&#191;C&#243;mo se elige la ventana del contador proporcional seg&#250;n la part&#237;cula?",
+        a:"<strong>Part&#237;culas cargadas (&#945;, &#946;):</strong> ventana de Be o Al (bajo Z) para evitar RX caracter&#237;sticos.<br><strong>Rayos gamma:</strong> sin ventana, paredes de alto Z (lat&#243;n, cobre, plomo)."
+      },
+      // ── GEIGER-M&#220;LLER ─────────────────────────────────────────
+      {
+        q:"&#191;Cu&#225;les son las caracter&#237;sticas del contador Geiger-M&#252;ller?",
+        a:"V: 800&#8211;950V &bull; Gas: Arg&#243;n + gas extintor (alcohol, fl&#250;or) &bull; Factor multiplicaci&#243;n: 10&#8311;&#8211;10&#185;&#8304; &bull; &#964; &#8776; 100&#956;s &bull; <strong>No requiere amplificaci&#243;n</strong> &bull; Se&#241;al independiente de la part&#237;cula y la energ&#237;a &#8594; <strong>NO sirve para espectroscop&#237;a</strong> &bull; Detecta &#945;, &#946; y &#947;."
+      },
+      {
+        q:"&#191;Qu&#233; es el gas extintor en el Geiger-M&#252;ller y por qu&#233; se usa?",
+        a:"Los iones&#8314; forman una <strong>nube que reduce el campo el&#233;ctrico</strong> cerca del c&#225;todo, pudiendo liberar e&#8315; secundarios y desencadenar nuevas avalanchas.<br>El <strong>gas extintor</strong> (quenching: alcohol, fl&#250;or) absorbe los iones&#8314; antes de llegar al c&#225;todo. Exceso de extintor &#8594; captura e&#8315; &#8594; &#8595;eficiencia."
+      },
+      {
+        q:"&#191;Por qu&#233; no existe el plateau perfecto en el Geiger-M&#252;ller?",
+        a:"Debido a: <em>inhomogeneidad del campo el&#233;ctrico</em>, <em>apantallamiento inhomog&#233;neo</em> de los iones&#8314;, y <em>recogida de pulsos de menor intensidad</em> durante el tiempo de recuperaci&#243;n."
+      },
+      // ── CENTELLEADORES ────────────────────────────────────────
+      {
+        q:"&#191;Cu&#225;les son los 3 elementos de un detector de centelleo?",
+        a:"<strong>Material centelleador:</strong> convierte la energ&#237;a en luz visible/UV.<br><strong>Acoplamiento &#243;ptico:</strong> dirige la luz al PMT.<br><strong>Fotomultiplicador (PMT):</strong> genera un impulso el&#233;ctrico proporcional a la luz &#8594; <code>E depositada &#8733; luz producida</code>."
+      },
+      {
+        q:"&#191;Qu&#233; propiedades generales tienen los centelleadores?",
+        a:"Transparentes a su propia radiaci&#243;n &bull; &#237;ndice de refracci&#243;n ~1,4 &bull; Rendimiento bajo pero <strong>lineal con la E</strong> &bull; Factor Fano &#8776; 1 &bull; Detectores <em>indirectos y activos</em> &bull; Alta eficiencia de recolecci&#243;n."
+      },
+      {
+        q:"&#191;Cu&#225;les son las caracter&#237;sticas del centelleador inorg&#225;nico NaI(Tl)?",
+        a:"Cristal: <strong>NaI(Tl)</strong>, CsI(Tl), BGO &bull; &#964; &#8776; 10 ns &bull; Velocidad <em>baja</em> (&#956;s) &bull; Alto rendimiento &bull; Z=53 &#8594; buena detecci&#243;n de R&#947; &bull; <strong>Desventaja:</strong> higroscópico + quebradizo. Eficacia &#8733; 1/T. M&#225;s eficiente pero peor resoluci&#243;n que Ge(Li)."
+      },
+      {
+        q:"&#191;Cu&#225;les son las caracter&#237;sticas del centelleador org&#225;nico?",
+        a:"Cristal: C&#8321;&#8324;H&#8321;&#8322;, benceno, pl&#225;sticos &bull; &#964; &#8776; 10 ns &bull; Velocidad <em>m&#225;s r&#225;pida</em> (ns) &bull; Producci&#243;n por <em>desexcitaciones moleculares</em> &bull; Fuerte dependencia con T &bull; Detecta: <strong>neutrones r&#225;pidos/lentos + &#946;</strong> &bull; Bajo Z &#8594; poca eficiencia para &#947;."
+      },
+      {
+        q:"&#191;C&#243;mo funciona el tubo fotomultiplicador (PMT)?",
+        a:"1. Fot&#243;n incide en el <strong>fotoc&#225;todo</strong> &#8594; efecto fotoel&#233;ctrico (eficiencia cu&#225;ntica ~10&#8211;20%).<br>2. Los e&#8315; son atra&#237;dos hacia ~10 <strong>d&#237;nodos</strong> (&#916;V=50&#8211;100V entre ellos).<br>3. Amplificaci&#243;n total: <code>I = 2<sup>N</sup>&middot;I&#8320;</code> (N = n&#186; d&#237;nodos).<br>Ruido &#8733; &#8730;&#193;rea &middot; &#8730;ancho de banda."
+      },
+      {
+        q:"&#191;Qu&#233; son el quenching y el background en centelleadores?",
+        a:"<strong>Quenching:</strong> disminuci&#243;n de fotones que llegan al fotoc&#225;todo por procesos f&#237;sicos/qu&#237;micos &#8594; espectro desplazado a bajas energ&#237;as.<br><strong>Background:</strong> amplificaci&#243;n de la se&#241;al por fuentes ajenas (radiactividad natural, c&#243;smica...)."
+      },
+      // ── DETECTORES DE SEMICONDUCTOR ───────────────────────────
+      {
+        q:"&#191;Cu&#225;l es el fundamento del detector de semiconductor?",
+        a:"Uni&#243;n p-n con zona de deplexión. La radiaci&#243;n crea pares <strong>e&#8315;&#8211;h&#8314;</strong> (no e&#8315;&#8211;ion&#8314;) que son separados por el campo el&#233;ctrico. Se trabaja en <em>polarizaci&#243;n inversa</em> (~10&#8308; V) para ampliar la zona de deplexión."
+      },
+      {
+        q:"&#191;Cu&#225;les son las ventajas y desventajas del detector semiconductor?",
+        a:"<strong>Ventajas:</strong> mejor resoluci&#243;n que cualquier detector &bull; ~3 eV por par (10&#215; menos que gases) &bull; alta densidad &#8594; m&#225;s sensible &bull; &#964; &#8776; 100 ns &bull; F &#8776; 0,1.<br><strong>Desventajas:</strong> respuesta var&#237;a con T, E y &#225;ngulo &bull; d&#243;sis hist&#243;rica acumulada."
+      },
+      {
+        q:"&#191;Qu&#233; detecta cada tipo de semiconductor?",
+        a:"<strong>Si:</strong> part&#237;culas cargadas (&#945;, &#946;)<br><strong>Si(Li):</strong> RX de alta energ&#237;a<br><strong>Ge:</strong> RX y R&#947; (mejor resoluci&#243;n gamma)<br><strong>LEGe:</strong> R&#947; de baja energ&#237;a.<br>F<sub>Si</sub> &gt; F<sub>Ge</sub> &#8594; Ge tiene mejor resoluci&#243;n."
+      },
+      // ── DOS&#205;METROS ────────────────────────────────────────────
+      {
+        q:"&#191;C&#243;mo funciona el dos&#237;metro termoluminiscente (TLD)?",
+        a:"La radiaci&#243;n genera pares e&#8315;&#8211;h&#8314; que quedan <strong>atrapados en defectos</strong> del cristal. Al calentar (annealing), se liberan y emiten luz &#8594; <em>curva de glow</em>. &#193;rea bajo la curva &#8733; dosis.<br>Materiales: <strong>LiF</strong> (Z~8,2), Li&#8322;B&#8324;O&#8327;, CaSO&#8324;, Al&#8322;O&#8323;, CaF&#8322;. Pasivo y reutilizable."
+      },
+      {
+        q:"&#191;Cu&#225;les son las ventajas e inconvenientes del TLD?",
+        a:"<strong>Ventajas:</strong> peque&#241;o, reutilizable, pasivo, lectura r&#225;pida, rango 10&#8315;&#8309;&#8211;10&#179; Gy, preciso y sensible.<br><strong>Desventajas:</strong> informaci&#243;n se borra al leer &bull; sensible a T &#8594; <em>fading</em> (p&#233;rdida de se&#241;al espont&#225;nea) &bull; interferencia IR de cuerpo negro &bull; falsas lecturas por humedad."
+      },
+      {
+        q:"&#191;Qu&#233; es el fading en un TLD?",
+        a:"P&#233;rdida de la se&#241;al TL con el tiempo debido a la <strong>emisi&#243;n espont&#225;nea a temperatura ambiente</strong> de los portadores atrapados. Limita el tiempo entre irradiaci&#243;n y lectura."
+      },
+      {
+        q:"&#191;Cu&#225;les son las ventajas e inconvenientes de la pel&#237;cula radiogr&#225;fica como dos&#237;metro?",
+        a:"Contiene granos de AgBr en gel. Ennegrecimiento (D.O.) &#8733; dosis.<br><strong>Ventajas:</strong> resoluci&#243;n espacial 2D, lectura permanente, rango lineal, pasiva.<br><strong>Desventajas:</strong> no reutilizable, sensible al ambiente, requiere procesado, no mide neutrones de baja energ&#237;a."
+      },
+      {
+        q:"&#191;Qu&#233; es el dos&#237;metro de Fricke?",
+        a:"Dos&#237;metro <em>qu&#237;mico</em> (pasivo, no personal). La radiaci&#243;n oxida iones <strong>Fe&#178;&#8314; &#8594; Fe&#179;&#8314;</strong> proporcionalmente a la dosis. Equivalente al agua y tejidos. En gel proporciona distribuciones <strong>3D de dosis</strong> medibles por resonancia magn&#233;tica."
+      },
+      {
+        q:"&#191;Qu&#233; es el dos&#237;metro OSL y en qu&#233; se diferencia del TLD?",
+        a:"La dosimetr&#237;a <strong>OSL</strong> usa <em>l&#225;seres</em> en vez de calor para liberar portadores atrapados. Los <strong>PSL</strong> (f&#243;sforos fotoestimulables) son la principal aplicaci&#243;n &#8594; radiograf&#237;a digital reutilizable (Computed Radiography). Mismo fading que TLD."
+      },
+      // ── DETECTOR CHERENKOV ────────────────────────────────────
+      {
+        q:"&#191;Cu&#225;l es el principio del detector Cherenkov?",
+        a:"Detecta la <strong>radiaci&#243;n Cherenkov</strong> emitida cuando una part&#237;cula cargada viaja a v &gt; c/n.<br>Condici&#243;n: <code>&#946;&middot;n &gt; 1</code> &bull; &#193;ngulo: <code>cos&#952; = 1/(&#946;n)</code> &bull; Luz <em>direccional en cono</em> (no is&#243;tropa) &bull; &#964; &#8776; ps (<strong>el m&#225;s r&#225;pido</strong>) &bull; Baja eficiencia."
+      },
+      // ── DETECTORES DE NEUTRONES ───────────────────────────────
+      {
+        q:"&#191;C&#243;mo se detectan los neutrones t&#233;rmicos y los r&#225;pidos?",
+        a:"<strong>T&#233;rmicos</strong> (alta &#963; de absorci&#243;n): materiales con B, Li o He &#8594; emiten part&#237;culas cargadas al capturarlos &#8594; detector gaseoso (BF&#8323;) o centelleador.<br><strong>R&#225;pidos:</strong> colisiones con n&#250;cleos de bajo Z (moderadores); reacci&#243;n &#179;He(n,p)&#179;H + moderador de polietileno."
+      },
+      // ── OTROS DETECTORES ──────────────────────────────────────
+      {
+        q:"&#191;C&#243;mo funciona la c&#225;mara de burbujas?",
+        a:"L&#237;quido <strong>supercalentado</strong>: la radiaci&#243;n lo evapora localmente formando burbujas visibles &#8594; <em>trayectorias visualizables</em>. Con campo magn&#233;tico se distinguen part&#237;culas. Con ella se descubri&#243; el bari&#243;n &#937;&#8315;."
+      },
+      {
+        q:"&#191;C&#243;mo funciona la c&#225;mara de hilos multihilos?",
+        a:"Combina Geiger y contador proporcional. Gas (He, Ne) entre dos planos de hilos perpendiculares (eje X e Y). Los hilos que descargan identifican la posici&#243;n (x, y) de la part&#237;cula. &#916;V entre hilos &#8733; energ&#237;a incidente."
+      },
+      {
+        q:"&#191;Qu&#233; es un calor&#237;metro como dos&#237;metro?",
+        a:"Mide la <strong>variaci&#243;n de temperatura</strong> producida por la radiaci&#243;n &#8594; mide la dosis <em>directamente</em>.<br>Ventaja: no depende de la LET ni de la tasa de dosis (en condiciones adiab&#225;ticas).<br>Desventaja: &#916;T muy peque&#241;a &#8594; necesita excelente aislamiento."
+      },
+      // ── TEOR&#205;A DE LA CAVIDAD ──────────────────────────────────
+      {
+        q:"&#191;Qu&#233; establece la teor&#237;a de Bragg-Gray?",
+        a:"Relaciona la dosis en el medio (D<sub>m</sub>) con la dosis en la cavidad (D<sub>g</sub>): <code>D<sub>m</sub> = S<sub>m,g</sub> &middot; D<sub>g</sub></code><br>Condiciones: cavidad <em>peque&#241;a</em> respecto al rango de part&#237;culas, fluencia no alterada, medio con CPE/TCPE, sin interacci&#243;n entre radiaci&#243;n indirecta y cavidad."
+      },
+      {
+        q:"&#191;En qu&#233; se diferencian las teor&#237;as de Spencer-Attix y Burlin respecto a Bragg-Gray?",
+        a:"<strong>Spencer-Attix:</strong> considera los efectos de los <em>rayos delta</em> mediante la LET (extensi&#243;n de Bragg-Gray).<br><strong>Burlin:</strong> trata cavidades de tama&#241;o <em>intermedio</em>, considerando la atenuaci&#243;n de la radiaci&#243;n dentro de la propia cavidad."
+      },
+      {
+        q:"&#191;Qu&#233; establece el Teorema de Fano?",
+        a:"En un medio de composici&#243;n dada, sometido a un flujo uniforme de radiaci&#243;n primaria, el flujo de la <strong>radiaci&#243;n secundaria es tambi&#233;n uniforme e independiente de la densidad</strong> del medio. Permite relajar las condiciones de tama&#241;o de cavidad si tiene la misma composici&#243;n que el medio."
+      },
+      // ── TABLA COMPARATIVA ─────────────────────────────────────
+      {
+        q:"&#191;Cu&#225;les son los tiempos muertos (&#964;) de los detectores gaseosos y Cherenkov?",
+        a:"<strong>C&#225;mara de ionizaci&#243;n:</strong> &#964; &#8776; 1 &#956;s<br><strong>Contador proporcional:</strong> &#964; &#8776; 10 &#956;s<br><strong>Geiger-M&#252;ller:</strong> &#964; &#8776; 100 &#956;s<br><strong>Cherenkov:</strong> &#964; &#8776; ps (el m&#225;s r&#225;pido)"
+      },
+      {
+        q:"&#191;Qu&#233; detectores sirven para espectroscop&#237;a y cu&#225;les no?",
+        a:"<strong>S&#205;:</strong> C&#225;mara de ionizaci&#243;n (modo pulso), contador proporcional (mejor gaseoso), semiconductor Ge (mayor resoluci&#243;n), NaI(Tl).<br><strong>NO:</strong> Geiger-M&#252;ller (se&#241;al independiente de la energ&#237;a)."
+      },
+      {
+        q:"&#191;Cu&#225;les son los factores de multiplicaci&#243;n de los detectores gaseosos?",
+        a:"<strong>C&#225;mara de ionizaci&#243;n:</strong> factor = 1 (sin multiplicaci&#243;n).<br><strong>Contador proporcional:</strong> 1 &#8211; 10&#8311;.<br><strong>Geiger-M&#252;ller:</strong> 10&#8311; &#8211; 10&#185;&#8304;."
+      }
+    ]
+  },
   { num:12, name:"Protecci&#243;n Radiol&#243;gica",            cards:[] },
   { num:13, name:"Aplicaciones M&#233;dicas",               cards:[] },
   { num:14, name:"F&#237;sica Cu&#225;ntica",                    cards:[] },
@@ -843,6 +1089,7 @@ function render() {
   document.getElementById("cardPill").className = "pill pill-q";
   document.getElementById("cardPill").textContent = "Pregunta";
   document.getElementById("cardNum").textContent = n+"/"+total;
+  document.getElementById("topicNumBadge").textContent = c._n && c._tot ? c._n+"/"+c._tot : "";
   document.getElementById("cardContent").className = "txt-q";
   document.getElementById("cardContent").innerHTML = c.q;
   document.getElementById("cardHint").textContent = "Toca para ver la respuesta";
@@ -885,6 +1132,7 @@ function doFlip() {
       cw.className = "card-wrap is-answer";
       document.getElementById("cardPill").className = "pill pill-a";
       document.getElementById("cardPill").textContent = "Respuesta";
+      document.getElementById("topicNumBadge").textContent = c._n && c._tot ? c._n+"/"+c._tot : "";
       document.getElementById("cardContent").className = "txt-a";
       document.getElementById("cardContent").innerHTML = c.a;
       document.getElementById("cardHint").textContent = "Val\u00f3rate para continuar";
@@ -894,6 +1142,7 @@ function doFlip() {
       cw.className = "card-wrap is-question";
       document.getElementById("cardPill").className = "pill pill-q";
       document.getElementById("cardPill").textContent = "Pregunta";
+      document.getElementById("topicNumBadge").textContent = c._n && c._tot ? c._n+"/"+c._tot : "";
       document.getElementById("cardContent").className = "txt-q";
       document.getElementById("cardContent").innerHTML = c.q;
       document.getElementById("cardHint").textContent = "Toca para ver la respuesta";
@@ -1026,6 +1275,14 @@ document.addEventListener("keydown",function(e){
 
 // ── INIT ──────────────────────────────────────────────────────────
 loadFromStorage();
+
+// ── ESTAMPAR ÍNDICE LOCAL DE TEMA EN CADA TARJETA ─────────────────
+for(var _ti=0;_ti<TOPICS.length;_ti++){
+  for(var _ci=0;_ci<TOPICS[_ti].cards.length;_ci++){
+    TOPICS[_ti].cards[_ci]._n   = _ci+1;
+    TOPICS[_ti].cards[_ci]._tot = TOPICS[_ti].cards.length;
+  }
+}
 
 // ── PWA MANIFEST ─────────────────────────────────────────────────
 (function() {
