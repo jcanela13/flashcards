@@ -894,7 +894,428 @@ var TOPICS = [
   { num:14, name:"F&#237;sica Cu&#225;ntica",                    cards:[] },
   { num:15, name:"F&#237;sica Nuclear",                    cards:[] },
   { num:16, name:"Part&#237;culas",                         cards:[] },
-  { num:17, name:"Termodin&#225;mica",                      cards:[] },
+  {
+    num:17,
+    name:"Termodin&#225;mica",
+    cards:[
+      // ── PRINCIPIO CERO ───────────────────────────────────────
+      {
+        q:"&#191;Qu&#233; establece el Principio Cero de la Termodin&#225;mica?",
+        a:"Define el concepto de <strong>temperatura y equilibrio t&#233;rmico</strong>. Es transitivo: si A est&#225; en equilibrio con B y B con C, entonces A y C est&#225;n en equilibrio a la misma temperatura."
+      },
+      {
+        q:"&#191;Cu&#225;les son las escalas termom&#233;tricas y c&#243;mo se convierten?",
+        a:"<code>(K&#8722;273)/5 = &#176;C/5 = (&#176;F&#8722;32)/9 = (R&#8722;459)/9</code><br>&bull; Kelvin, Celsius, Fahrenheit, Rankine.<br>&bull; La temperatura en la que &#176;C = &#176;F es <strong>&#8722;40&#176;</strong>."
+      },
+      {
+        q:"&#191;Qu&#233; tipos de term&#243;metros existen y qu&#233; propiedad mide cada uno?",
+        a:"&bull; <strong>L&#237;quido:</strong> longitud (P=cte)<br>&bull; <strong>Gas V=cte:</strong> presi&#243;n<br>&bull; <strong>Resistencia:</strong> resistencia el&#233;ctrica (V=cte)<br>&bull; <strong>Bim&#233;t&#225;lico:</strong> &#225;ngulo (tensi&#243;n=cte)<br>&bull; <strong>Termopar:</strong> voltaje (corriente=cte)"
+      },
+      {
+        q:"&#191;Qu&#233; es un termopar y c&#243;mo funciona?",
+        a:"Dos alambres de metales <strong>distintos</strong> unidos en un extremo (uni&#243;n caliente). Una diferencia de T genera voltaje por el <em>efecto Seebeck</em>. Mide T en un rango muy amplio; es r&#225;pido y econ&#243;mico, pero de precisi&#243;n moderada."
+      },
+      {
+        q:"&#191;Qu&#233; es el efecto Seebeck?",
+        a:"Un gradiente de T entre la uni&#243;n de dos metales distintos genera una <strong>fuerza electromotriz</strong>:<br><code>V = S &middot; &Delta;T</code><br>S = coeficiente de Seebeck. Base del termopar y de los generadores termoel&#233;ctricos."
+      },
+      {
+        q:"&#191;Qu&#233; es el efecto Peltier?",
+        a:"Al aplicar una corriente a la uni&#243;n de dos metales distintos, <strong>un lado se enfr&#237;a y el otro se calienta</strong>. Es el inverso del Seebeck.<br><code>Q = I &middot; &Pi; &middot; t</code><br>Aplicado en refrigeraci&#243;n de sistemas electr&#243;nicos."
+      },
+      {
+        q:"&#191;Qu&#233; es el efecto Thomson?",
+        a:"Si existe un <strong>gradiente de T y el coeficiente Seebeck var&#237;a con T</strong>, aparece una fuente adicional de calor en el conductor (adem&#225;s del efecto Joule). Coeficiente: &tau;."
+      },
+      // ── COEFICIENTES DE DILATACI&#211;N ─────────────────────────
+      {
+        q:"&#191;Cu&#225;les son los coeficientes de dilataci&#243;n t&#233;rmica?",
+        a:"Lineal: <code>L = L&#8320;(1+&alpha;&Delta;T)</code><br>Superficial: <code>S = S&#8320;(1+&beta;&Delta;T)</code>; <code>&beta; = 2&alpha;</code><br>Volum&#233;trico: <code>V = V&#8320;(1+&gamma;&Delta;T)</code>; <code>&gamma; = 3&alpha;</code>"
+      },
+      {
+        q:"&#191;C&#243;mo se define el coeficiente de compresibilidad isot&#233;rmica &kappa;<sub>T</sub>?",
+        a:"<code>&kappa;<sub>T</sub> = &#8722;(1/V)(&part;V/&part;P)<sub>T</sub></code><br>Mide la variaci&#243;n relativa de volumen al cambiar la presi&#243;n a T=cte. Siempre positivo por el signo menos."
+      },
+      // ── GAS IDEAL ────────────────────────────────────────────
+      {
+        q:"&#191;Cu&#225;l es la ecuaci&#243;n del gas ideal y en qu&#233; condiciones es v&#225;lida?",
+        a:"<code>PV = nRT</code> (R = 8,314 J/mol&#183;K)<br>V&#225;lida a <strong>bajas presiones y altas temperaturas</strong>. No predice condensaci&#243;n ni es exacta a altas presiones o bajas T."
+      },
+      {
+        q:"&#191;Cu&#225;les son las leyes derivadas del gas ideal?",
+        a:"&bull; <strong>Boyle:</strong> T=cte &#8594; <code>P&#183;V = cte</code><br>&bull; <strong>Charles:</strong> P=cte &#8594; <code>V/T = cte</code><br>&bull; <strong>Gay-Lussac:</strong> V=cte &#8594; <code>P/T = cte</code><br>&bull; <strong>Combinada:</strong> <code>P&#183;V/T = cte</code>"
+      },
+      {
+        q:"&#191;Cu&#225;l es la ecuaci&#243;n de Van der Waals y qu&#233; corrige?",
+        a:"<code>(P + a/V<sub>m</sub>&#178;)(V<sub>m</sub> &#8722; b) = RT</code><br>&bull; <em>a</em>: correci&#243;n por <strong>atracciones intermoleculares</strong><br>&bull; <em>b</em>: correci&#243;n por <strong>volumen finito</strong> de las mol&#233;culas<br>Predice condensaci&#243;n y punto cr&#237;tico."
+      },
+      {
+        q:"&#191;Qu&#233; son las coordenadas del punto cr&#237;tico en un gas de Van der Waals?",
+        a:"<code>V<sub>c</sub> = 3b; T<sub>c</sub> = 8a/(27Rb); P<sub>c</sub> = a/(27b&#178;)</code><br>En el punto cr&#237;tico coexisten gas y l&#237;quido sin ser distinguibles. Las isotermas con T &gt; T<sub>c</sub> no permiten licuefacci&#243;n."
+      },
+      {
+        q:"&#191;Qu&#233; es la ecuaci&#243;n del virial?",
+        a:"<code>PV = RT(1 + A/V + B/V&#178; + ...)</code><br>A, B... son los <strong>coeficientes del virial</strong>, dependientes de T y del gas. A la temperatura de Boyle se anula el segundo coeficiente."
+      },
+      {
+        q:"&#191;Qu&#233; tipos de sistemas existen seg&#250;n intercambio con el entorno?",
+        a:"&bull; <strong>Aislado:</strong> ni calor ni materia<br>&bull; <strong>Cerrado:</strong> solo energ&#237;a (no materia)<br>&bull; <strong>Abierto:</strong> intercambia energ&#237;a y materia"
+      },
+      // ── PRIMER PRINCIPIO ─────────────────────────────────────
+      {
+        q:"&#191;C&#243;mo se enuncia el Primer Principio de la Termodin&#225;mica?",
+        a:"La energ&#237;a no se crea ni se destruye: <code>dU = &delta;Q + &delta;W</code><br>La variaci&#243;n de energ&#237;a interna es la suma del calor recibido y el trabajo realizado <em>sobre</em> el sistema."
+      },
+      {
+        q:"&#191;Qu&#233; es la energ&#237;a interna U y c&#243;mo var&#237;a en distintos procesos?",
+        a:"Funci&#243;n de estado: <code>U = f(T, P, V)</code><br>&bull; Proceso c&#237;clico: <code>&Delta;U = 0</code><br>&bull; Proceso adiab&#225;tico: <code>&Delta;U = W</code><br>&bull; Isoc&#243;rico: <code>&Delta;U = Q<sub>V</sub></code>"
+      },
+      {
+        q:"&#191;C&#243;mo se calcula el trabajo en los principales procesos?",
+        a:"&bull; Isoc&#243;rico: <code>W = 0</code><br>&bull; Isob&#225;rico: <code>W = &#8722;P(V&#8322;&#8722;V&#8321;)</code><br>&bull; Isot&#233;rmico (G.I.): <code>W = &#8722;nRT&middot;ln(V&#8322;/V&#8321;)</code><br>&bull; Adiab&#225;tico: <code>W = C<sub>V</sub>(T&#8321;&#8722;T&#8322;)</code>"
+      },
+      {
+        q:"&#191;C&#243;mo se define el calor y la capacidad calor&#237;fica?",
+        a:"El calor <strong>no es funci&#243;n de estado</strong>. Capacidad calor&#237;fica: <code>Q = C &middot; &Delta;T</code><br><code>C = m &middot; c = n &middot; c&#773;</code><br>Unidades: J/K. 1 cal = 4,184 J = calor para elevar 1 g de agua 1&#176;C."
+      },
+      {
+        q:"&#191;Qu&#233; es el calor espec&#237;fico y c&#243;mo se definen C<sub>P</sub> y C<sub>V</sub>?",
+        a:"<code>C<sub>V</sub> = (dQ/dT)<sub>V</sub> = (&part;U/&part;T)<sub>V</sub></code><br><code>C<sub>P</sub> = (dQ/dT)<sub>P</sub> = (&part;H/&part;T)<sub>P</sub></code><br>C<sub>P</sub> &gt; C<sub>V</sub> siempre porque a P=cte hay que hacer trabajo expansivo adicional."
+      },
+      {
+        q:"&#191;Qu&#233; es la Relaci&#243;n de Mayer?",
+        a:"Para un gas ideal: <code>C<sub>P</sub> &#8722; C<sub>V</sub> = nR</code><br>Forma generalizada para cualquier sistema: <code>C<sub>P</sub> &#8722; C<sub>V</sub> = &alpha;&#178;TV/&kappa;<sub>T</sub></code>"
+      },
+      {
+        q:"&#191;Cu&#225;les son los valores de C<sub>P</sub>, C<sub>V</sub> y &gamma; para gases ideales?",
+        a:"<table style='font-size:11px;width:100%'><tr><td></td><td><strong>Monoat.</strong></td><td><strong>Diat.</strong></td><td><strong>Triat.</strong></td></tr><tr><td>C<sub>V</sub></td><td>3/2 R</td><td>5/2 R</td><td>3R</td></tr><tr><td>C<sub>P</sub></td><td>5/2 R</td><td>7/2 R</td><td>4R</td></tr><tr><td>&gamma;</td><td>5/3</td><td>7/5</td><td>4/3</td></tr></table>"
+      },
+      {
+        q:"&#191;Qu&#233; es la entalpía H y para qu&#233; sirve?",
+        a:"<code>H = U + PV</code>; <code>dH = TdS + VdP</code><br>A presi&#243;n constante: <code>&Delta;H = Q<sub>P</sub></code><br>Conveniente para <strong>reacciones qu&#237;micas y procesos isob&#225;ricos</strong>. Reacciones endot&#233;rmicas: &Delta;H &gt; 0."
+      },
+      {
+        q:"&#191;C&#243;mo se transmite el calor? Nombra los mecanismos.",
+        a:"&bull; <strong>Conducci&#243;n (Fourier):</strong> <code>J = &#8722;&kappa;&nabla;T</code>; &kappa; = conductividad t&#233;rmica [W/m&#183;K]<br>&bull; <strong>Convecci&#243;n (Newton):</strong> <code>J = h&Delta;T</code>; h = coeficiente de convecci&#243;n<br>&bull; <strong>Radiaci&#243;n:</strong> emisi&#243;n de ondas EM"
+      },
+      {
+        q:"&#191;Qu&#233; son las transformaciones termodin&#225;micas principales?",
+        a:"&bull; <strong>Isoc&#243;rica:</strong> V=cte, W=0<br>&bull; <strong>Isob&#225;rica:</strong> P=cte, Q=&Delta;H<br>&bull; <strong>Isot&#233;rmica:</strong> T=cte, &Delta;U=0<br>&bull; <strong>Adiab&#225;tica:</strong> Q=0, &Delta;U=W<br>&bull; C&#237;clica: &Delta;U=0, W=&#8722;Q"
+      },
+      {
+        q:"&#191;Qu&#233; establece la ecuaci&#243;n de Laplace para un proceso adiab&#225;tico?",
+        a:"Para un gas ideal: <code>PV<sup>&gamma;</sup> = cte</code> y tambi&#233;n <code>TV<sup>&gamma;&#8722;1</sup> = cte</code><br>con <code>&gamma; = C<sub>P</sub>/C<sub>V</sub> &gt; 1</code><br>La adiab&#225;tica es <strong>m&#225;s empinada</strong> que la isoterma en el diagrama PV."
+      },
+      {
+        q:"&#191;Qu&#233; es un proceso politr&#243;pico?",
+        a:"<code>PV<sup>n<sub>p</sub></sup> = cte</code><br>&bull; n<sub>p</sub>=0: isob&#225;rico<br>&bull; n<sub>p</sub>=1: isot&#233;rmico<br>&bull; n<sub>p</sub>=&gamma;: adiab&#225;tico<br>&bull; n<sub>p</sub>=&#8734;: isoc&#243;rico"
+      },
+      {
+        q:"&#191;C&#243;mo se mide &gamma; por el m&#233;todo de Rüchardt?",
+        a:"Se hace oscilar una bola en un tubo unido a un recipiente con gas. Si la oscilaci&#243;n es r&#225;pida &#8594; proceso adiab&#225;tico. Se calcula &gamma; a partir del periodo de oscilaci&#243;n:<br><code>&gamma; = 4&pi;&#178;mV/(PA&#178;T&#178;)</code>"
+      },
+      // ── SEGUNDO PRINCIPIO ────────────────────────────────────
+      {
+        q:"&#191;Cu&#225;les son los tres enunciados del Segundo Principio?",
+        a:"&bull; <strong>Carnot:</strong> ning&#250;n motor es m&#225;s eficiente que uno reversible entre los mismos focos<br>&bull; <strong>Kelvin-Planck:</strong> imposible convertir todo el calor de un foco en trabajo<br>&bull; <strong>Clausius:</strong> imposible transferir calor de fr&#237;o a caliente sin trabajo externo"
+      },
+      {
+        q:"&#191;Qu&#233; establece el enunciado de Kelvin-Planck?",
+        a:"Es imposible construir una m&#225;quina t&#233;rmica c&#237;clica cuyo &#250;nico efecto sea absorber calor de un foco y convertirlo <strong>completamente</strong> en trabajo. Siempre hay calor residual cedido al foco fr&#237;o. <code>W &le; Q<sub>h</sub></code>"
+      },
+      {
+        q:"&#191;Qu&#233; establece el enunciado de Clausius?",
+        a:"Es imposible que el calor fluya <strong>espont&#225;neamente</strong> de un cuerpo fr&#237;o a uno caliente sin trabajo externo. Implica que no existen refrigeradores sin consumo energ&#233;tico. <code>W + Q<sub>c</sub> = Q<sub>h</sub></code>"
+      },
+      {
+        q:"&#191;Qu&#233; establece el enunciado de Carath&#233;odory?",
+        a:"En la vecindad de cualquier estado de equilibrio, existen <strong>estados inaccesibles mediante procesos adiab&#225;ticos</strong>. Permite definir la entrop&#237;a de forma rigurosa y conduce a <code>dS &ge; 0</code>."
+      },
+      {
+        q:"&#191;Qu&#233; es el Ciclo de Carnot y cu&#225;l es su rendimiento?",
+        a:"Ciclo ideal reversible con 2 isot&#233;rmas + 2 adiab&#225;ticas:<br>Expansi&#243;n isot&#233;rma &#8594; Exp. adiab&#225;tica &#8594; Compresi&#243;n isot&#233;rma &#8594; Comp. adiab&#225;tica<br><code>&eta;<sub>C</sub> = 1 &#8722; T<sub>f</sub>/T<sub>c</sub></code><br>Es el <strong>ciclo m&#225;s eficiente</strong> entre dos focos."
+      },
+      {
+        q:"&#191;C&#243;mo se define el rendimiento de una m&#225;quina t&#233;rmica?",
+        a:"<code>&eta; = W/Q<sub>absorbido</sub> = 1 &#8722; |Q<sub>2</sub>|/|Q<sub>1</sub>|</code><br>Siempre &eta; &lt; 1 (2&#186; principio). Para el ciclo de Carnot: <code>&eta;<sub>C</sub> = 1 &#8722; T<sub>2</sub>/T<sub>1</sub></code>"
+      },
+      {
+        q:"&#191;C&#243;mo se componen los ciclos de Stirling, Otto, Diesel y Brayton?",
+        a:"&bull; <strong>Stirling:</strong> 2 isot&#233;rmas + 2 isoc&#243;ras<br>&bull; <strong>Otto:</strong> 2 adiab&#225;ticas + 2 isoc&#243;ras (motor gasolina)<br>&bull; <strong>Diesel:</strong> 2 adiab&#225;ticas + 1 isoc&#243;ra + 1 isob&#225;ra<br>&bull; <strong>Brayton:</strong> 2 adiab&#225;ticas + 2 isob&#225;ras (turbinas de gas)"
+      },
+      {
+        q:"&#191;Qu&#233; es el ciclo de Rankine?",
+        a:"Ciclo usado en <strong>centrales termoel&#233;ctricas de vapor</strong>: 2 adiab&#225;ticas + 1 isoc&#243;ra + 2 isotermas.<br>Expansi&#243;n adiab&#225;tica &#8594; Transmisi&#243;n calor isob&#225;ra e isot&#233;rma &#8594; Compresi&#243;n adiab&#225;tica &#8594; Transmisi&#243;n calor isob&#225;ra."
+      },
+      {
+        q:"&#191;Qu&#233; es la desigualdad de Clausius?",
+        a:"Para cualquier ciclo termodin&#225;mico: <code>&oint; &delta;Q/T &le; 0</code><br>La igualdad se cumple s&#243;lo para ciclos <strong>reversibles</strong>. Permite deducir la entrop&#237;a como funci&#243;n de estado."
+      },
+      {
+        q:"&#191;C&#243;mo se define la entrop&#237;a S?",
+        a:"Para un proceso reversible: <code>dS = &delta;Q<sub>rev</sub>/T</code><br>Unidades: J/K. Es <strong>funci&#243;n de estado</strong> y diferencial exacto.<br>Ley fundamental: <code>dU = TdS &#8722; PdV</code>"
+      },
+      {
+        q:"&#191;C&#243;mo var&#237;a la entrop&#237;a del universo?",
+        a:"&bull; Proceso reversible: <code>&Delta;S<sub>univ</sub> = 0</code><br>&bull; Proceso irreversible: <code>&Delta;S<sub>univ</sub> &gt; 0</code><br><code>dS<sub>univ</sub> = dS<sub>sist</sub> + dS<sub>entorno</sub> &ge; 0</code><br>Criterio de espontaneidad: <code>&Delta;S<sub>univ</sub> &gt; 0</code>"
+      },
+      {
+        q:"&#191;C&#243;mo se calcula la variaci&#243;n de entrop&#237;a en distintos procesos reversibles?",
+        a:"&bull; Adiab&#225;tico: <code>&Delta;S = 0</code><br>&bull; Isot&#233;rmico: <code>&Delta;S = Q/T</code><br>&bull; Isoc&#243;rico: <code>&Delta;S = C<sub>V</sub>&#183;ln(T<sub>f</sub>/T<sub>i</sub>)</code><br>&bull; Isob&#225;rico: <code>&Delta;S = C<sub>P</sub>&#183;ln(T<sub>f</sub>/T<sub>i</sub>)</code>"
+      },
+      {
+        q:"&#191;C&#243;mo var&#237;a la entrop&#237;a en un proceso isot&#233;rmico reversible de gas ideal?",
+        a:"<code>&Delta;S = nR&#183;ln(V<sub>f</sub>/V<sub>i</sub>)</code><br>Si el gas se expande (V<sub>f</sub> &gt; V<sub>i</sub>), la entrop&#237;a <strong>aumenta</strong>. Este resultado es v&#225;lido tambi&#233;n para la expansi&#243;n irreversible contra el vac&#237;o (funci&#243;n de estado)."
+      },
+      {
+        q:"&#191;Qu&#233; establece el Teorema de Prigogine?",
+        a:"En un sistema lineal e <strong>irreversible</strong>, la tasa de producci&#243;n de entrop&#237;a <strong>decrece con el tiempo</strong> y es m&#237;nima en el estado estacionario (Teorema de Curie-Prigogine)."
+      },
+      // ── POTENCIALES TERMODIN&#193;MICOS ──────────────────────────
+      {
+        q:"&#191;Cu&#225;les son los cuatro potenciales termodin&#225;micos y sus variables naturales?",
+        a:"&bull; <strong>U</strong> (energ&#237;a interna): variables S, V<br>&bull; <strong>H = U+PV</strong> (entalpía): variables S, P<br>&bull; <strong>F = U&#8722;TS</strong> (Helmholtz): variables T, V<br>&bull; <strong>G = H&#8722;TS</strong> (Gibbs): variables T, P"
+      },
+      {
+        q:"&#191;Cu&#225;les son las formas diferenciales de los potenciales termodin&#225;micos?",
+        a:"<code>dU = TdS &#8722; PdV</code><br><code>dH = TdS + VdP</code><br><code>dF = &#8722;SdT &#8722; PdV</code><br><code>dG = &#8722;SdT + VdP</code>"
+      },
+      {
+        q:"&#191;Qu&#233; es la Energ&#237;a libre de Helmholtz F?",
+        a:"<code>F = U &#8722; TS</code>; <code>dF = &#8722;SdT &#8722; PdV</code><br>Variables naturales: T, V. En un proceso isot&#233;rmico reversible, <code>&Delta;F = W<sub>m&#225;x</sub></code>. Se minimiza en equilibrio a T y V constantes."
+      },
+      {
+        q:"&#191;Qu&#233; es la Energ&#237;a libre de Gibbs G?",
+        a:"<code>G = H &#8722; TS = U &#8722; TS + PV</code>; <code>dG = &#8722;SdT + VdP</code><br>Variables naturales: T, P. Para proceso espont&#225;neo: <code>&Delta;G &lt; 0</code>. Se minimiza en equilibrio a T y P constantes. Principio de Le Ch&#226;telier."
+      },
+      {
+        q:"&#191;Qu&#233; son las Relaciones de Maxwell?",
+        a:"Derivadas cruzadas de los potenciales termodin&#225;micos:<br>&bull; De U: <code>(&part;T/&part;V)<sub>S</sub> = &#8722;(&part;P/&part;S)<sub>V</sub></code><br>&bull; De H: <code>(&part;T/&part;P)<sub>S</sub> = (&part;V/&part;S)<sub>P</sub></code><br>&bull; De F: <code>(&part;S/&part;V)<sub>T</sub> = (&part;P/&part;T)<sub>V</sub></code><br>&bull; De G: <code>(&part;S/&part;P)<sub>T</sub> = &#8722;(&part;V/&part;T)<sub>P</sub></code>"
+      },
+      {
+        q:"&#191;C&#243;mo se memorizan las Relaciones de Maxwell con el truco GFUH?",
+        a:"Mnem&#243;nico: <em>Good Professors Have Studied Under Very Fine Teachers</em><br>Tabla 3x3: G, P, H / F, _, U / V, S, T<br>Las variables en el numerador son las que <strong>no</strong> son naturales del potencial. Las del denominador son las naturales cambiadas."
+      },
+      {
+        q:"&#191;Qu&#233; son las ecuaciones TdS?",
+        a:"Permiten expresar <code>&delta;Q = TdS</code> en t&#233;rminos medibles:<br><code>TdS = C<sub>V</sub>dT + T(&part;P/&part;T)<sub>V</sub>dV</code><br><code>TdS = C<sub>P</sub>dT &#8722; T(&part;V/&part;T)<sub>P</sub>dP</code>"
+      },
+      {
+        q:"&#191;Qu&#233; cociente da la raz&#243;n entre compresibilidades isot&#233;rmica y adiab&#225;tica?",
+        a:"<code>&kappa;<sub>T</sub>/&kappa;<sub>S</sub> = &gamma; = C<sub>P</sub>/C<sub>V</sub></code><br>Como &gamma; &gt; 1 para gases ideales, &kappa;<sub>T</sub> &gt; &kappa;<sub>S</sub>, y las <strong>isotermas tienen menor pendiente</strong> que las adiab&#225;ticas en el diagrama PV."
+      },
+      // ── EXPANSI&#211;N DE JOULE-KELVIN ──────────────────────────
+      {
+        q:"&#191;En qu&#233; consiste la Expansi&#243;n de Joule-Kelvin?",
+        a:"Un gas se hace pasar a trav&#233;s de un <strong>orificio peque&#241;o (estrangulaci&#243;n)</strong> desde una presi&#243;n P<sub>i</sub> a P<sub>f</sub>. Es un proceso <strong>adiab&#225;tico e isoent&#225;lpico</strong> (irreversible)."
+      },
+      {
+        q:"&#191;Qu&#233; es el coeficiente de Joule-Kelvin &mu;?",
+        a:"<code>&mu; = (&part;T/&part;P)<sub>H</sub></code><br>&bull; &mu; &gt; 0: el gas se <strong>enfr&#237;a</strong> al expandirse (por debajo de T<sub>inversi&#243;n</sub>)<br>&bull; &mu; &lt; 0: el gas se calienta<br>&bull; Gas ideal: <code>&mu; = 0</code> siempre"
+      },
+      {
+        q:"&#191;Para qu&#233; sirve la expansi&#243;n de Joule-Kelvin en la pr&#225;ctica?",
+        a:"Permite la <strong>licuefacci&#243;n de gases</strong>: operando por debajo de la temperatura de inversi&#243;n, el gas se enfr&#237;a al expandirse. La <em>temperatura de inversi&#243;n</em> es donde &mu; cambia de signo."
+      },
+      // ── SISTEMAS ABIERTOS Y POTENCIAL QU&#205;MICO ────────────────
+      {
+        q:"&#191;Qu&#233; es el potencial qu&#237;mico &mu;<sub>j</sub>?",
+        a:"Energ&#237;a por mol al a&#241;adir una mol&#233;cula manteniendo el resto constante:<br><code>&mu;<sub>j</sub> = (&part;U/&part;n<sub>j</sub>)<sub>S,V</sub> = (&part;G/&part;n<sub>j</sub>)<sub>T,P</sub> = G<sub>m</sub></code><br>En equilibrio, &mu; es igual en todas las fases."
+      },
+      {
+        q:"&#191;Qu&#233; dice el Teorema de Euler aplicado a la termodin&#225;mica?",
+        a:"Para variables extensivas (funciones homog&#233;neas de grado 1):<br><code>U = TS &#8722; PV + &sum;&mu;<sub>i</sub>n<sub>i</sub></code><br><code>G = &sum;&mu;<sub>i</sub>n<sub>i</sub></code>"
+      },
+      {
+        q:"&#191;Qu&#233; es la relaci&#243;n de Gibbs-Duhem?",
+        a:"Relaciona las variables intensivas de un sistema abierto:<br><code>SdT &#8722; VdP + &sum;n<sub>i</sub>d&mu;<sub>i</sub> = 0</code><br>Las variables intensivas no son todas independientes."
+      },
+      {
+        q:"&#191;Qu&#233; son las ecuaciones de Euler de los sistemas abiertos?",
+        a:"<code>dU = TdS &#8722; PdV + &sum;&mu;<sub>j</sub>dn<sub>j</sub></code><br>Los potenciales termodin&#225;micos se modifican a&#241;adiendo el t&#233;rmino <code>&sum;&mu;<sub>j</sub>dn<sub>j</sub></code>."
+      },
+      // ── TERCER PRINCIPIO ─────────────────────────────────────
+      {
+        q:"&#191;Cu&#225;les son las dos formas del Tercer Principio de la Termodin&#225;mica?",
+        a:"&bull; <strong>D&#233;bil (Nernst):</strong> en cualquier transformaci&#243;n isoc&#243;ra o isob&#225;ra cercana al cero absoluto, <code>lim<sub>T&#8594;0</sub>&Delta;S = 0</code><br>&bull; <strong>Fuerte (Planck):</strong> la entrop&#237;a de toda sustancia pura, cristalina y perfectamente ordenada es S=0 a T=0 K"
+      },
+      {
+        q:"&#191;Por qu&#233; es imposible alcanzar el cero absoluto?",
+        a:"El Tercer Principio impone una <strong>limitaci&#243;n fundamental</strong>: alcanzar T=0 K requiere un n&#250;mero <em>infinito</em> de procesos termodin&#225;micos. El cero absoluto es inalcanzable."
+      },
+      {
+        q:"&#191;Cu&#225;les son las consecuencias del Tercer Principio cerca del cero absoluto?",
+        a:"&bull; <code>lim<sub>T&#8594;0</sub>&alpha; = 0</code> (coef. expansi&#243;n t&#233;rmica)<br>&bull; <code>lim<sub>T&#8594;0</sub>&beta; = 0</code> (coef. piezot&#233;rmico)<br>&bull; <code>lim<sub>T&#8594;0</sub>C<sub>V</sub> = 0</code> y <code>C<sub>P</sub> = 0</code><br>&bull; <code>&Delta;G &#8594; &Delta;H</code> a T &#8594; 0<br>&bull; Los vidrios <em>no</em> verifican la tercera ley."
+      },
+      {
+        q:"&#191;Qu&#233; es la desmagnertizaci&#243;n adiab&#225;tica?",
+        a:"T&#233;cnica para alcanzar temperaturas muy bajas: se aplica y retira intermitentemente un campo magn&#233;tico en condiciones adiab&#225;ticas. Es una consecuencia pr&#225;ctica del Tercer Principio."
+      },
+      // ── TRANSICIONES DE FASE ─────────────────────────────────
+      {
+        q:"&#191;Cu&#225;ntos tipos de transiciones de fase existen? Descr&#237;belos.",
+        a:"&bull; <strong>1&#186; orden:</strong> G(T) continua, pero &part;G discontinua (saltos finitos en S y V). &alpha;=&#8734;, &kappa;=&#8734;, C<sub>P</sub>=&#8734;. Ejemplos: fusi&#243;n, vaporizaci&#243;n.<br>&bull; <strong>2&#186; orden:</strong> G y &part;G continuas, pero &part;&#178;G tiene salto finito. Ejemplos: superconductor, ferromagn&#233;tico.<br>&bull; <strong>Lambda:</strong> igual que 2&#186; pero &part;&#178;G tiene salto infinito. Ej: He(I)-He(II)."
+      },
+      {
+        q:"&#191;Qu&#233; es la Regla de Fases de Gibbs?",
+        a:"Grados de libertad de un sistema de C componentes y P fases:<br><code>F = C &#8722; P + 2</code><br>Para una sola componente: punto triple (3 fases) &#8594; F=0 (punto fijo en diagrama P-T)."
+      },
+      {
+        q:"&#191;Qu&#233; es el punto triple y el punto cr&#237;tico del agua?",
+        a:"&bull; <strong>Punto triple:</strong> coexisten las 3 fases. Agua: T=273,16 K, P=610,5 Pa<br>&bull; <strong>Punto cr&#237;tico:</strong> densidades de gas y l&#237;quido iguales. Agua: T=374&#176;C, P=218 atm<br>Por encima de T<sub>cr</sub> no hay distinci&#243;n gas-l&#237;quido."
+      },
+      {
+        q:"&#191;Qu&#233; es la ecuaci&#243;n de Clausius-Clapeyron?",
+        a:"Da la pendiente de la curva de coexistencia en el diagrama P-T:<br><code>dP/dT = L/(T&Delta;V) = &Delta;S/&Delta;V</code><br>L = calor latente. Para vapor-l&#237;quido con gas ideal: <code>dP/dT &asymp; LP/(RT&#178;)</code>"
+      },
+      {
+        q:"&#191;Cu&#225;l es el calor latente y c&#243;mo se relaciona con la entrop&#237;a?",
+        a:"Calor absorbido/cedido en una transici&#243;n de fase a T y P constantes:<br><code>L<sub>12</sub> = T(S<sub>2</sub>&#8722;S<sub>1</sub>) = H<sub>2</sub>&#8722;H<sub>1</sub></code><br>No hay cambio de temperatura durante el cambio de fase."
+      },
+      {
+        q:"&#191;Qu&#233; son las ecuaciones de Ehrenfest para transiciones de 2&#186; orden?",
+        a:"Relacionan la pendiente de la curva de coexistencia:<br><code>dP/dT = &Delta;C<sub>P</sub>/(VT&Delta;&alpha;) = &Delta;&alpha;/&Delta;&kappa;</code><br>Las propiedades V y S son continuas, pero sus derivadas (&alpha;, &kappa;, C<sub>P</sub>) presentan discontinuidades finitas."
+      },
+      {
+        q:"&#191;Cu&#225;les son los ejemplos de transiciones de 2&#186; orden y lambda?",
+        a:"<strong>2&#186; orden:</strong> conductor&#8211;superconductor (sin campo), ferromagn&#233;tico&#8211;paramagn&#233;tico<br><strong>Lambda:</strong> transici&#243;n Helio I&#8211;Helio II l&#237;quido, transiciones orden&#8211;desorden<br>En las &lambda;: &alpha;=&#8734;, &kappa;=&#8734;, C<sub>P</sub>=&#8734;"
+      },
+      // ── PROPIEDADES COLIGATIVAS ───────────────────────────────
+      {
+        q:"&#191;Qu&#233; son las propiedades coligativas?",
+        a:"Propiedades de disoluciones que dependen del <strong>n&#250;mero de part&#237;culas de soluto</strong> pero no de su naturaleza:<br>&bull; Aumento ebolisc&#243;pico<br>&bull; Descenso crieosc&#243;pico<br>&bull; Presi&#243;n osm&#243;tica"
+      },
+      {
+        q:"&#191;Qu&#233; es la presi&#243;n osm&#243;tica?",
+        a:"Presi&#243;n a aplicar para detener el flujo de disolvente a trav&#233;s de una membrana semipermeable:<br><code>&Pi;<sub>osm</sub> = RT&Delta;C</code><br>C = concentraci&#243;n molar. An&#225;loga a la ley de gases ideales: <code>&Pi;V = n<sub>B</sub>RT</code>"
+      },
+      {
+        q:"&#191;Qu&#233; son el aumento ebolisc&#243;pico y el descenso crieosc&#243;pico?",
+        a:"&bull; <strong>Aumento ebullisc&#243;pico:</strong> el soluto eleva la T de ebullici&#243;n: <code>&Delta;T = K<sub>e</sub>&#183;m</code><br>&bull; <strong>Descenso crieosc&#243;pico:</strong> el soluto baja la T de fusi&#243;n: <code>&Delta;T = K<sub>c</sub>&#183;m</code><br>m = molalidad; K = constante del disolvente"
+      },
+      // ── HUMEDAD ──────────────────────────────────────────────
+      {
+        q:"&#191;C&#243;mo se definen la humedad absoluta y relativa?",
+        a:"&bull; <strong>Humedad absoluta:</strong> masa de vapor de agua/masa de aire seco<br>&bull; <strong>Humedad relativa:</strong> <code>H<sub>r</sub> = P<sub>H2O</sub>/P<sub>sat</sub></code><br>P<sub>sat</sub> = presi&#243;n de saturaci&#243;n a esa T"
+      },
+      {
+        q:"&#191;Qu&#233; es la temperatura del punto de roc&#237;o?",
+        a:"Temperatura a la que el agua empieza a condensarse si el aire se enfr&#237;a a P=cte. La humedad absoluta permanece cte. y la relativa aumenta hasta alcanzar el 100%."
+      },
+      // ── RADIACI&#211;N T&#201;RMICA ──────────────────────────────────
+      {
+        q:"&#191;Qu&#233; son la emitancia, irradiancia y coeficiente de absorci&#243;n?",
+        a:"&bull; <strong>Emitancia:</strong> energ&#237;a emitida por unidad de superficie y tiempo<br>&bull; <strong>Irradiancia:</strong> energ&#237;a recibida por unidad de superficie y tiempo<br>&bull; <strong>Coef. de absorci&#243;n &alpha;:</strong> raz&#243;n emitancia/irradiancia. Para cuerpo negro: &alpha;=1"
+      },
+      {
+        q:"&#191;Qu&#233; relaci&#243;n existe entre emitancia e irradiancia en equilibrio t&#233;rmico?",
+        a:"En equilibrio: <code>Emitancia = Irradiancia &middot; &alpha;</code><br>El cuerpo negro (&#945;=1) absorbe y emite toda la radiaci&#243;n. Es el emisor m&#225;s eficiente."
+      },
+      // ── RESISTENCIA T&#201;RMICA ─────────────────────────────────
+      {
+        q:"&#191;C&#243;mo se define la resistencia t&#233;rmica y cu&#225;les son sus formas?",
+        a:"Resistencia al flujo de calor:<br>&bull; <strong>Plano:</strong> <code>R = L/(k&#183;A)</code><br>&bull; <strong>Cilindro:</strong> <code>R = ln(r<sub>e</sub>/r<sub>i</sub>)/(2&pi;kL)</code><br>&bull; <strong>Esfera:</strong> <code>R = (1/r<sub>i</sub>&#8722;1/r<sub>e</sub>)/(4&pi;k)</code>"
+      },
+      // ── MECA. ESTAD&#205;STICA ───────────────────────────────────
+      {
+        q:"&#191;C&#243;mo define la F&#237;sica Estad&#237;stica la entrop&#237;a?",
+        a:"<code>S = &#8722;k<sub>B</sub>&sum;<sub>i</sub> p<sub>i</sub>&#183;ln(p<sub>i</sub>)</code><br>Para el ensemble microcan&#243;nico (p<sub>i</sub>=1/&Omega;): <code>S = k<sub>B</sub>&#183;ln&Omega;</code><br>&Omega; = n&#250;mero de microestados accesibles. Es la <strong>medida del desorden</strong>."
+      },
+      {
+        q:"&#191;Qu&#233; es el ensemble can&#243;nico y la funci&#243;n de partici&#243;n Z?",
+        a:"Para un sistema cerrado en contacto con un foco a T:<br><code>p<sub>i</sub> = e<sup>&#8722;&beta;E<sub>i</sub></sup>/Z</code>; <code>Z = &sum; e<sup>&#8722;&beta;E<sub>i</sub></sup></code><br><code>&beta;=1/(k<sub>B</sub>T)</code>. De Z se obtienen todas las magnitudes: U, S, P, &mu;."
+      },
+      {
+        q:"&#191;Qu&#233; establece el Teorema de Equipartici&#243;n de la Energ&#237;a?",
+        a:"En el l&#237;mite cl&#225;sico, cada <strong>t&#233;rmino cuadr&#225;tico</strong> del hamiltoniano (en q o p) aporta <code>&#189;k<sub>B</sub>T</code> a la energ&#237;a media.<br>Gas monoat&#243;mico (3 traslaciones): <code>U = 3/2 nRT</code><br>Diat&#243;mico (5 grados): <code>U = 5/2 nRT</code>"
+      },
+      {
+        q:"&#191;Cu&#225;les son las tres distribuciones estad&#237;sticas?",
+        a:"&bull; <strong>Maxwell-Boltzmann:</strong> part&#237;culas cl&#225;sicas distinguibles<br>&bull; <strong>Fermi-Dirac:</strong> fermiones (&#189; espín entero). <code>n<sub>FD</sub> = 1/(e<sup>&beta;(E&#8722;&mu;)</sup>+1)</code><br>&bull; <strong>Bose-Einstein:</strong> bosones (espín entero). <code>n<sub>BE</sub> = 1/(e<sup>&beta;(E&#8722;&mu;)</sup>&#8722;1)</code>"
+      },
+      {
+        q:"&#191;Qu&#233; es la distribuci&#243;n de Maxwell-Boltzmann para velocidades?",
+        a:"Distribuci&#243;n de momentos para gas ideal cl&#225;sico:<br><code>f(p) &prop; p&#178;&#183;e<sup>&#8722;&beta;p&#178;/2m</sup></code><br>Velocidades caracter&#237;sticas: <code>v<sub>m&#225;x</sub> &lt; &langle;v&rangle; &lt; v<sub>rms</sub></code><br><code>v<sub>rms</sub> = &radic;(3k<sub>B</sub>T/m)</code>"
+      },
+      {
+        q:"&#191;Qu&#233; es el recorrido libre medio &lambda; en un gas ideal?",
+        a:"Distancia media entre colisiones:<br><code>&lambda; = 1/(&radic;2&#183;n&#183;&sigma;)</code><br>&sigma; = secci&#243;n eficaz de colisi&#243;n. Permite estimar coeficientes de viscosidad, conducci&#243;n y difusi&#243;n: <code>&kappa; &asymp; &#189;c&lambda;&langle;v&rangle;</code>"
+      },
+      {
+        q:"&#191;Qu&#233; es el condensado de Bose-Einstein?",
+        a:"A temperaturas muy bajas, los <strong>bosones se acumulan en el estado fundamental</strong> (E=0). Ocurre en el espacio de momentos. El He-4 l&#237;quido II es un ejemplo macrosc&#243;pico. La presi&#243;n del gas bos&#243;nico en el estado fundamental es nula."
+      },
+      {
+        q:"&#191;Qu&#233; es la Energ&#237;a de Fermi en un gas ferm&#237;onico?",
+        a:"Energ&#237;a m&#225;xima alcanzada por los fermiones a <strong>T=0 K</strong>. Los fermiones no pueden acumularse en el nivel fundamental (exclusi&#243;n de Pauli) y se distribuyen hasta E<sub>F</sub>.<br><code>P &prop; E<sub>F</sub><sup>5/2</sup>; P &prop; n<sup>5/3</sup></code>"
+      },
+      // ── LEYES COMPLEMENTARIAS ────────────────────────────────
+      {
+        q:"&#191;Qu&#233; es la Ley de Dalton para mezclas de gases ideales?",
+        a:"La presi&#243;n total es la suma de las <strong>presiones parciales</strong>:<br><code>P = &sum; P<sub>i</sub> = &sum; n<sub>i</sub>RT/V</code><br>Cada gas act&#250;a como si ocupara solo el volumen total."
+      },
+      {
+        q:"&#191;Qu&#233; son los coeficientes de viscosidad en funci&#243;n de T?",
+        a:"&bull; Gases: <code>&eta; &prop; &radic;T</code> (aumenta con T)<br>&bull; L&#237;quidos: <code>&eta; &prop; 1/&radic;T</code> (disminuye con T)<br>Conductividad t&#233;rmica en gases: <code>&kappa; &prop; &radic;T</code>"
+      },
+      {
+        q:"&#191;Qu&#233; dice el Principio de Le Ch&#226;telier?",
+        a:"Los procesos espont&#225;neos inducidos por una desviaci&#243;n del equilibrio estable se efect&#250;an en la direcci&#243;n que <strong>tiende a restablecer el equilibrio</strong>. Formalmente: <code>&Delta;G &lt; 0</code> para procesos espont&#225;neos a T y P constantes."
+      },
+      {
+        q:"&#191;Qu&#233; son los procesos cuasiest&#225;tico y reversible?",
+        a:"&bull; <strong>Cuasiest&#225;tico:</strong> todos los estados intermedios son de equilibrio (variaci&#243;n infinitamente lenta)<br>&bull; <strong>Reversible:</strong> proceso cuasiest&#225;tico sin hist&#233;resis (puede invertirse exactamente cambiando infinitesimalmente las condiciones). Todos los reversibles son cuasiest&#225;ticos, pero no al rev&#233;s."
+      },
+      {
+        q:"&#191;Qu&#233; son las variables extensivas e intensivas?",
+        a:"&bull; <strong>Extensivas:</strong> dependen del tama&#241;o del sistema (V, U, S, n, H, G...)<br>&bull; <strong>Intensivas:</strong> mismas en cada parte del sistema (T, P, &rho;, &mu;...)<br>&bull; <strong>Espec&#237;ficas/molares:</strong> extensivas por unidad de masa o mol (v, u, s...)"
+      },
+      {
+        q:"&#191;Qu&#233; es un proceso de fusi&#243;n y c&#243;mo es su pendiente en el diagrama P-T?",
+        a:"Transici&#243;n s&#243;lido&#8211;l&#237;quido (1&#186; orden). Por Clausius-Clapeyron: <code>dP/dT = L/T&Delta;V</code>. Pendiente muy grande (casi vertical). <strong>Excepci&#243;n: el agua</strong>, donde la pendiente es <em>negativa</em> (el hielo ocupa m&#225;s que el agua)."
+      },
+      {
+        q:"&#191;C&#243;mo se calcula la entrop&#237;a en procesos de cambio de fase?",
+        a:"<code>&Delta;S = L/T<sub>transici&#243;n</sub> = &Delta;H/T</code><br>L = calor latente. La temperatura <em>no</em> var&#237;a durante el cambio de fase, pero la entrop&#237;a s&#237; aumenta (si es absorci&#243;n de calor)."
+      },
+      {
+        q:"&#191;Qu&#233; es el equilibrio termodin&#225;mico entre dos sistemas?",
+        a:"Se requieren cuatro equilibrios simult&#225;neos:<br>&bull; <strong>Mec&#225;nico:</strong> igual P<br>&bull; <strong>T&#233;rmico:</strong> igual T<br>&bull; <strong>Qu&#237;mico:</strong> igual composici&#243;n<br>&bull; <strong>El&#233;ctrico:</strong> igual V el&#233;ctrico"
+      },
+      {
+        q:"&#191;Qu&#233; condiciones de equilibrio impone el formalismo m&#237;nimo de la energ&#237;a?",
+        a:"Equilibrio en S=cte: <code>dU = 0</code> y <code>d&#178;U &gt; 0</code> (m&#237;nimo de U)<br>Equilibrio general: la entrop&#237;a es <strong>m&#225;xima</strong> &#8594; <code>dS = 0</code> y <code>d&#178;S &lt; 0</code><br>Los potenciales {H, F, G} se <strong>minimizan</strong> a {P, T, T-P} ctes."
+      },
+      {
+        q:"&#191;Cu&#225;les son las relaciones de reciprocidad de Onsager?",
+        a:"En termodin&#225;mica del no equilibrio, los coeficientes cin&#233;ticos L<sub>ij</sub> que relacionan corrientes y fuerzas generalizadas verifican: <code>L<sub>ij</sub> = L<sub>ji</sub></code><br>Permite relacionar corrientes de calor y electricidad (termoelectricidad)."
+      },
+      {
+        q:"&#191;Qu&#233; es el Factor de M&#233;rito Z de un material termoel&#233;ctrico?",
+        a:"<code>Z = &sigma;&epsilon;&#178;/&kappa;</code><br>&sigma; = conductividad el&#233;ctrica; &epsilon; = coeficiente Seebeck; &kappa; = conductividad t&#233;rmica.<br>Un buen material termoel&#233;ctrico necesita <strong>alta conductividad el&#233;ctrica, alto Seebeck y baja conductividad t&#233;rmica</strong>."
+      },
+      {
+        q:"&#191;Qu&#233; son las distribuciones de Fermi-Dirac y Bose-Einstein?",
+        a:"Probabilidad de ocupaci&#243;n de un nivel E a temperatura T:<br>&bull; <strong>Fermi-Dirac (fermiones):</strong> <code>n<sub>FD</sub> = 1/(e<sup>(E&#8722;&mu;)/k<sub>B</sub>T</sup>+1)</code><br>&bull; <strong>Bose-Einstein (bosones):</strong> <code>n<sub>BE</sub> = 1/(e<sup>(E&#8722;&mu;)/k<sub>B</sub>T</sup>&#8722;1)</code>"
+      },
+      {
+        q:"&#191;Qu&#233; establece el Principio de Conservaci&#243;n de la Energ&#237;a en Termodin&#225;mica?",
+        a:"Es el Primer Principio: <code>dU = &delta;Q + &delta;W</code><br>La energ&#237;a <strong>no se crea ni se destruye</strong>, solo se transforma. Es imposible una m&#225;quina de movimiento perpetuo de primera especie (que genere trabajo sin absorber energ&#237;a)."
+      },
+      {
+        q:"&#191;Qu&#233; consecuencias tiene el Segundo Principio sobre la flecha del tiempo?",
+        a:"La entrop&#237;a del universo siempre aumenta en procesos irreversibles. Establece la <strong>irreversibilidad de los procesos naturales</strong> y define la direcci&#243;n temporal: el calor fluye espont&#225;neamente de caliente a fr&#237;o, no al contrario."
+      },
+      {
+        q:"&#191;Qu&#233; es la eficiencia del ciclo de Carnot expresada en temperaturas?",
+        a:"<code>&eta;<sub>C</sub> = 1 &#8722; T<sub>fr&#237;a</sub>/T<sub>caliente</sub></code><br>Usando temperaturas absolutas (Kelvin). Es el <strong>m&#225;ximo rendimiento posible</strong> para cualquier m&#225;quina que opere entre esos dos focos. La eficiencia real es siempre menor."
+      },
+      {
+        q:"&#191;Qu&#233; es la eficiencia de un refrigerador (coeficiente de funcionamiento)?",
+        a:"<code>&epsilon; = Q<sub>fr&#237;o</sub>/W = Q<sub>fr&#237;o</sub>/(Q<sub>caliente</sub>&#8722;Q<sub>fr&#237;o</sub>)</code><br>Para refrigerador de Carnot inverso: <code>&epsilon;<sub>C</sub> = T<sub>fr&#237;a</sub>/(T<sub>caliente</sub>&#8722;T<sub>fr&#237;a</sub>)</code><br>Puede ser &gt; 1."
+      },
+    ]
+  },
   { num:18, name:"Electromagnetismo",              cards:[] },
   { num:19, name:"Mec&#225;nica",                           cards:[] },
   { num:20, name:"Relatividad",                    cards:[] },
